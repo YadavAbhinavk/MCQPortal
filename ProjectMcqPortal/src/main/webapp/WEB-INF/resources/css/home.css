@@ -1,0 +1,276 @@
+/* home page 1st section starts here */
+
+.welcome_section{
+    width: 100%;
+    background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0.5)),url('../images/bg_image.jpeg');
+    background-position: center;
+    background-size: cover;
+    min-height: 500px;
+    top:60px;
+    position: relative;
+    justify-content: center;
+    padding: 10px 20px;
+    display: flex;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+
+}
+.text 
+{
+    padding: 50px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+.text p 
+{
+    color: #fff;
+    font-size: 35px;
+}
+.text p .span{
+    color: #fff;
+    font-size: 15px;
+}
+.welcome_section .text h1
+{
+    font-size:60px;
+    justify-content: left;
+    display: inline;
+}
+.welcome_section span,h2 
+{
+    font-family: cursive;
+    color: rgb(0, 0, 0);
+    font-size: 100px;
+}
+.welcome_section .text span
+{
+    font-size: 100px;
+    display: inline;
+    color:red;
+}
+/* home page 1st section ends here */
+
+/* home page 2nd section starts here */
+.help_container
+{
+    min-height: 100px;
+    width: 100%;
+    background: rgb(251, 244, 210);
+    padding: 50px;
+    text-align: center;
+    justify-content: center; 
+}
+.help_container_inside 
+{
+    
+    margin: 30px auto;
+    display: flex;
+    text-align: center;
+    flex-direction: row;
+    cursor: pointer;
+    justify-content: space-evenly;
+}
+.help_container_inside > div 
+{
+    height: 460px;
+    width: 330px;
+    padding: 25px;
+    margin: 25px ;
+
+}
+.help_container_inside > div img:hover 
+{
+    box-shadow: 0px 5px 20px 1px rgb(185, 7, 255);
+}
+.help_container_inside > div img 
+{
+    width: 100%;
+    
+    border-radius: 50%;
+    margin: 15px auto;
+    transition: 0.8s;
+}
+.help_container_inside > div h2 
+{
+    font-size: 1.8em;
+}
+.help_container_inside > div h4 
+{
+    position: relative;
+    color: rgb(185, 7, 255);
+    font-family: 'Poppins';
+    text-align: center;
+    font-size: 1em;
+    
+}
+.help_container h2
+{
+    font-size: 2.5em;
+}
+
+/* home page 2nd section ends here */
+
+/* dashboard table starts here */
+.table
+{
+    margin: auto;
+    width: 90%;
+    background-color:rgb(240, 240, 240);
+    min-height: 500px;
+    overflow: auto;
+    box-shadow: 2px 2px 8px 1px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    transition: 0.9s;
+    position: relative;
+    top:80px;
+}
+.table:hover
+{
+    box-shadow: 2px 2px 8px 1px var(--main-color-1);
+    transition: 0.9s;
+}
+.table_header
+{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:20px;
+    background-color:rgb(240, 240, 240);
+}
+td button{
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 8px;
+    cursor: pointer;
+    color: #fff;
+}
+td button:nth-child(1)
+{
+    background-color: var(--main-color-1);
+}
+td button:nth-child(2)
+{
+    background-color: #f80000;
+}
+.add_new 
+{
+    padding: 10px 20px;
+    color: #fff;
+    background-color: var(--main-color-1);
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.table_header input 
+{
+    padding: 10px 20px;
+    margin: 0 10px;
+    outline: none;
+    border: 1px solid var(--main-color-1);
+    border-radius: 5px;
+    color: var(--main-color-1);
+}
+::placeholder 
+{
+    color: purple;
+}
+.table_header p 
+{
+    color: purple;
+}
+
+table 
+{
+    width: 100%;
+    table-layout: fixed;
+    min-width:1000px;
+    border-collapse: collapse;
+}
+thead th 
+{
+    position: sticky;
+    top:0;
+    background-color: #f6f9fc;
+    color: rgb(160, 160, 160);
+    font-size: 12px;
+}
+th,td 
+{
+    border-bottom:1px solid purple;
+    padding: 10px 20px;
+    word-break: break-all;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+tr:hover td 
+{
+    color: var(--main-color-1);
+    cursor: pointer;
+    background-color: #f6f9fc;
+}
+::-webkit-scrollbar
+{
+    height: 10px;
+    width: 5px;
+}
+::-webkit-scrollbar-track{
+    box-shadow: inset 0 0 6px var(--main-color-1);
+}
+::-webkit-scrollbar-thumb{
+    box-shadow: inset 0 0 20px var(--main-color-1);
+}
+
+/* dashboard table ends here */
+
+
+/* Media queries for responsiveness */
+@media screen and (max-width: 768px) {
+    .welcome_section .text h1{
+        font-size: 35px;
+    }
+    .welcome_section .text span
+    {
+        font-size: 50px;
+    }
+    .text h1 h2 span
+    {
+        font-size: 35px;
+    }
+    .welcome_section .text h2
+    {
+        font-size: 50px;
+    }
+    .help_container_inside{
+        flex-direction: column;
+    }
+    .help_container_inside > div 
+    {
+        border-bottom: 1px solid #000;
+    }
+
+    /* dashboard table starts here */
+    .table_header input 
+    {
+        padding: 5px 5px;
+        width: 30%;
+        display: inline;
+    }
+    .table_header button
+    {
+        width: 70%;
+        display: inline;
+        padding: 0px;
+        margin: 5px;
+        font-size: 5px;
+    }
+    .table_header thead th 
+    {
+        font-size: 7px;
+    }
+    /* dashboard table ends here */
+}

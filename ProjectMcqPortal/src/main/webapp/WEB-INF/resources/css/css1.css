@@ -1,0 +1,116 @@
+@charset "ISO-8859-1";
+* 
+{
+	margin:0;
+	padding:0;
+}
+.result {
+	display: none;
+}
+
+.chkbox {
+	background-color: red;
+}
+
+.quiz_container  table tr {
+	display: block;
+	margin: 2px 0;
+	border-radius: 5px;
+	width:100%;
+}
+
+.start, .quiz_container {
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 5px 10px 2px rgba(100, 100, 100, 0.1);
+	width: 600px;
+	overflow: hidden;
+	margin: 15px auto;
+	transition: 1s;
+	cursor: pointer;
+}
+
+.quiz_container:hover {
+	box-shadow: 0 5px 10px 5px rgb(185, 7, 255);
+	transition: 0.9s;
+}
+
+.quiz_header {
+	padding: 4rem;
+}
+
+.quiz_container h2 {
+	padding: 1rem;
+	text-align: center;
+	margin: 0;
+}
+.quiz_container  table tr {
+	display: block;
+	margin: 2px 0;
+	border-radius: 5px;
+}
+ 
+.quiz_container {
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 5px 10px 2px rgba(100, 100, 100, 0.1);
+	width: 600px;
+	overflow: hidden;
+	margin: 15px auto;
+	transition: 1s;
+	cursor: pointer;
+}
+ 
+.quiz_container:hover {
+	box-shadow: 0 5px 10px 5px rgb(185, 7, 255);
+	transition: 0.9s;
+}
+ 
+.quiz_header {
+	padding: 4rem;
+}
+ 
+.quiz_container h2 {
+	padding: 1rem;
+	text-align: center;
+	margin: 0;
+}
+ 
+.quiz_button {
+	background-color: purple;
+	color: #fff;
+	width: 600px;
+	cursor: pointer;
+	border-radius: 5px;
+	border: none;
+	display: block;
+	font-family: inherit;
+	padding: 1.3rem;
+	font-size: 3.5rem;
+	text-transform: uppercase;
+	margin: 10px auto;
+	letter-spacing: 0.1;
+	transition: 1s;
+}
+ 
+.quiz_button:hover {
+	background-color: rgb(185, 7, 255);
+	letter-spacing: 0.5;
+	transition: 0.9s;
+}
+ 
+.quiz_button:focus {
+	outline: none;
+	background-color: #d205f2;
+	transition: 0.9s;
+}
+ 
+body {
+	background-image:
+		url('<c:url value="/resources/images/bg_image.jpeg"/>');
+	background-size: cover; /* Cover the entire background area */
+	background-position: center center; /* Center the background image */
+	background-repeat: no-repeat;
+	/* Prevent background image from repeating */
+	background-attachment: fixed;
+}
