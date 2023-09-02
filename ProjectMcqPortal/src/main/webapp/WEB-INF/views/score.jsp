@@ -127,6 +127,9 @@
 		}
 		%>
 	</div>
+		<a href = "<%=request.getContextPath()%>/user_dashboard">
+		Return to dashboard
+</a>
 
 	<script>
 		function onClick() {

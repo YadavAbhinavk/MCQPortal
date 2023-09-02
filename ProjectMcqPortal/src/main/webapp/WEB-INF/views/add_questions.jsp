@@ -40,38 +40,36 @@
 			<div class="ques_form">
 
 				<form action="<%= request.getContextPath() %>/quesForm/${tag}"
-					method="post" id="form${i}">
+					method="post" id="form${i}"  onsubmit="return checkform(this)">
 					<div class="box1">
 						<div>
 							<label for="ques_name${i}">Question:</label>
 						</div>
-						<textarea name="ques_name" id="" cols="50" rows="7">
-
-            </textarea>
+						<textarea name="ques_name" id="" cols="50" rows="7" required></textarea>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option1${i}">Option1:</label>
 						</div>
-						<input type="text" name="option1" id="">
+						<input type="text" name="option1" id="" required>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option2${i}">Option2:</label>
 						</div>
-						<input type="text" name="option2" id="">
+						<input type="text" name="option2" id="" required>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option3${i}">Option3:</label>
 						</div>
-						<input type="text" name="option3" id="">
+						<input type="text" name="option3" id="" required>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option4${i}">Option4:</label>
 						</div>
-						<input type="text" name="option4" id="">
+						<input type="text" name="option4" id="" required>
 					</div>
 					<div class="box1">
 						<div>
@@ -110,6 +108,23 @@
                 })
                 .catch(error => console.error("Error:", error));
             });
+            
+            
+            function checkform(form) {
+                // get all the inputs within the submitted form
+                var inputs = form.getElementsByTagName('input' || 'textarea');
+                for (var i = 0; i < inputs.length; i++) {
+                    // only validate the inputs that have the required attribute
+                    if(inputs[i].hasAttribute("required")){
+                        if(inputs[i].value == ""){
+                            // found an empty field that is required
+                            alert("Please fill all required fields");
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
         </script>
 		</c:forEach>
 	</div>

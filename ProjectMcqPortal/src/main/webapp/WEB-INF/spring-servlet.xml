@@ -73,4 +73,9 @@
 			<ref bean="jT" />
 		</property>
 	</bean>
+	<bean class="project.mcq.portal.dao.UserTestDaoImpl" name="userTestDao">
+		<property name="jdbcTemplate">
+			<ref bean="jT" />
+		</property>
+	</bean>
 </beans>

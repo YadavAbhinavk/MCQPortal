@@ -21,6 +21,7 @@
 	</nav>
 	
 	<%
+	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
 	String message = (String) request.getAttribute("message");
 	List<String> correct_ans = new ArrayList<String>();
@@ -32,8 +33,9 @@
 	<div class="start">
 		<div class="quiz_header">Welcome to ${tag} test.</div>
 	</div>
-	<form action="<%=request.getContextPath()%>/processSelectedRadioValues"
-		method="post">
+	  <div>Time left = <span id="timer"></span></div>
+	<form action="<%=request.getContextPath()%>/processSelectedRadioValues/<%=tag %>"
+		method="post" id = "testForm">
 		<%
 		if (listOfQuestions != null) {
 			int index = 0;
@@ -97,14 +99,64 @@
 		}
 		%>
 		<br> <br>
+		<input type="hidden" name="submissionTime" id="submissionTime" />
 		<button type="submit" value="Submit" class="quiz_button">Submit</button>
-	</form>
+	
+	
+	
 
-	<br>
-	<br>
-	<div id="result"></div>
-	<script>
-		
-	</script>
+</form>
+ <br>
+<br>
+
+<script>
+var time = 2*<%=listOfQuestions.size()%>;
+
+document.getElementById('timer').innerHTML =
+	  time + ":" + 00;
+	startTimer();
+
+
+	function startTimer() {
+	  var presentTime = document.getElementById('timer').innerHTML;
+	  var timeArray = presentTime.split(/[:]+/);
+	  var m = timeArray[0];
+	  var s = checkSecond((timeArray[1] - 1));
+	  if(s==59){m=m-1}
+	  if(m<0){
+	    return
+	  }
+	  
+	  document.getElementById('timer').innerHTML =
+	    m + ":" + s;
+	  console.log(m)
+	  setTimeout(startTimer, 1000);
+	  
+	}
+
+	function checkSecond(sec) {
+	  if (sec < 10 && sec >= 0) {sec = "0" + sec}; // add zero in front of numbers < 10
+	  if (sec < 0) {sec = "59"};
+	  return sec;
+	}
+
+
+document.getElementById("testForm").addEventListener("submit", function() {
+	var submissionTimeField = document.getElementById("submissionTime");
+	submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
+})
+	
+	window.setInterval(function(){ 
+		var submissionTimeField = document.getElementById("submissionTime");
+		submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
+    
+	document.getElementById("testForm").submit();
+        	
+}, time*60*1000);
+	
+        		
+        		
+
+    </script>
 </body>
 </html>

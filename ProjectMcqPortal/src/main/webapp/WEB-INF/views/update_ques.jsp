@@ -60,28 +60,28 @@
 					<div>
 						<label for="option1">Option 1:</label>
 					</div>
-					<input type="text" name="option1" value="<%=ques.getOption1()%>">
+					<input type="text" name="option1" value="<%=ques.getOption1()%>" required>
 				</div>
 
 				<div class="box1">
 					<div>
 						<label for="option2">Option 2:</label>
 					</div>
-					<input type="text" name="option2" value="<%=ques.getOption2()%>">
+					<input type="text" name="option2" value="<%=ques.getOption2()%>" required>
 				</div>
 
 				<div class="box1">
 					<div>
 						<label for="option3">Option 3:</label>
 					</div>
-					<input type="text" name="option3" value="<%=ques.getOption3()%>">
+					<input type="text" name="option3" value="<%=ques.getOption3()%>" required>
 				</div>
 
 				<div class="box1">
 					<div>
 						<label for="option4">Option 4:</label>
 					</div>
-					<input type="text" name="option4" value="<%=ques.getOption4()%>">
+					<input type="text" name="option4" value="<%=ques.getOption4()%>" required>
 				</div>
 
 				<div class="box1">
@@ -109,7 +109,42 @@
 		}
 		%>
 	</p>
-
+<script>
+            document.querySelector("#form${i}").addEventListener("submit", function(event) {
+                event.preventDefault();
+                const form = this;
+                const formData = new FormData(form);
+ 
+                fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    
+                    form.style.display = "none";
+                    
+                })
+                .catch(error => console.error("Error:", error));
+            });
+            
+            
+            function checkform(form) {
+                // get all the inputs within the submitted form
+                var inputs = form.getElementsByTagName('input' || 'textarea');
+                for (var i = 0; i < inputs.length; i++) {
+                    // only validate the inputs that have the required attribute
+                    if(inputs[i].hasAttribute("required")){
+                        if(inputs[i].value == ""){
+                            // found an empty field that is required
+                            alert("Please fill all required fields");
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        </script>
 
 </body>
 </html>
