@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import project.mcq.portal.entities.Admin;
@@ -12,7 +13,6 @@ import project.mcq.portal.entities.Question;
 import project.mcq.portal.entities.Test;
 import project.mcq.portal.entities.UserTest;
 import project.mcq.portal.rowmappers.UserTestRowMapper;
-
 
 public class UserTestDaoImpl implements UserTestDao {
 
@@ -26,27 +26,32 @@ public class UserTestDaoImpl implements UserTestDao {
 	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
 	}
-	
+
 	@Override
 	public int insertUser(UserTest userTest) {
-		String insertQuery = "INSERT INTO "
-				+ "user_tests "
-				+ "(user_id, tag, submission_time, score)"
-				+ "VALUES (?,?,?,?)";
+		try {
+			String insertQuery = "INSERT INTO " + "user_tests " + "(user_id, tag, submission_time, score)"
+					+ "VALUES (?,?,?,?)";
 
-		return this.jdbcTemplate.update(
-				insertQuery, userTest.getUserId(), userTest.getTag(), userTest.getSubmissionTime(), userTest.getScore());
+			return this.jdbcTemplate.update(insertQuery, userTest.getUserId(), userTest.getTag(),
+					userTest.getSubmissionTime(), userTest.getScore());
+		} catch (DataAccessException e) {
+
+			e.printStackTrace();
+			return -1;
+		}
 	}
 
 	@Override
 	public List<UserTest> getAllUserTest(int userId) {
-	
-		
-		
-		String selectAllTests = "Select * from user_tests WHERE user_id = ?";
-		return this.jdbcTemplate.query(selectAllTests, new UserTestRowMapper(),userId);
+		try {
+			String selectAllTests = "Select * from user_tests WHERE user_id = ?";
+			return this.jdbcTemplate.query(selectAllTests, new UserTestRowMapper(), userId);
+		} catch (DataAccessException e) {
 
-		
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }
