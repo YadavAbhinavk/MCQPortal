@@ -37,7 +37,7 @@ transition:0.3s;
 		<div class="table_header">
 			<p>User Dashboard</p>
 			<div>
-                <a href="#"><button class="add_new">View Past Tests</button></a>
+                <a href="<%= application.getContextPath() %>/user_test"><button class="add_new">View Past Tests</button></a>
             </div>
 		</div>
 <div class="table_section">
