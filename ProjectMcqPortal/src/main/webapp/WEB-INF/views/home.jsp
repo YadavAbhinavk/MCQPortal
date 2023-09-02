@@ -13,7 +13,7 @@
    <!-- welcome content starts here -->
     <div class="welcome_section">
         <div class="text">
-            <h1>Welcome to</h1><h2>Quiz<span>Vault</span></h2>
+            <h1>Welcome to our website</h1><h2>Quiz<span>Vault</span></h2>
             <p>  Join the fun with quizzes on C++, Python , Java and beyond. <br> <div class="span">because learning to code is like solving puzzles while sipping your favorite cup of coffee.</div> </p>
         </div>
 
