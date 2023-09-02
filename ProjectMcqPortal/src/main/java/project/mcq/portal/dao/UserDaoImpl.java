@@ -39,8 +39,8 @@ public class UserDaoImpl implements UserDao {
 		User user = null;
 		if(mobileNo != null && !mobileNo.isEmpty() ) {
 			if( password != null && !password.isEmpty()) {
-				System.out.println("User : " + user);
 				user = jdbcTemplate.queryForObject(query, new UserRowMapper(), mobileNo, password); 
+				System.out.println("User : " + user);
 			}
 		}
         return user;

@@ -25,13 +25,12 @@ DROP TABLE IF EXISTS `user_tests`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_tests` (
-  `user_test_id` int NOT NULL,
+  `user_test_id` int NOT NULL AUTO_INCREMENT,
   `user_id` int DEFAULT NULL,
   `tag` varchar(50) NOT NULL,
   `submission_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `score` int DEFAULT NULL,
   PRIMARY KEY (`user_test_id`),
-  UNIQUE KEY `tag` (`tag`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `user_tests_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `user_tests_ibfk_2` FOREIGN KEY (`tag`) REFERENCES `tests` (`tag`)

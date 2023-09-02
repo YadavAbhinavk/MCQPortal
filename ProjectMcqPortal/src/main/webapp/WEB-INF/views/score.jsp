@@ -17,6 +17,15 @@
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
 			Quiz<span>Vault</span>
 		</div>
+		<ul class="nav-links" id="navLinks">
+
+			<li><a href="<%=request.getContextPath()%>/user_dashboard">View Dashboard</a></li>
+		</ul>
+		<div class="burger" onclick="toggleMenu();">
+		<div class="line1"></div>
+		<div class="line2"></div>
+		<div class="line3"></div>
+	</div>
 	</nav>
 	<%
 	Integer score = (Integer) request.getAttribute("score");
@@ -127,20 +136,5 @@
 		}
 		%>
 	</div>
-		<a href = "<%=request.getContextPath()%>/user_dashboard">
-		Return to dashboard
-</a>
-
-	<script>
-		function onClick() {
-			var resultElements = document.getElementsByClassName("result");
-
-			for (var i = 0; i < resultElements.length; i++) {
-				resultElements[i].style.display = "block";
-			}
-		}
-	</script>
 </body>
-
-
 </html>

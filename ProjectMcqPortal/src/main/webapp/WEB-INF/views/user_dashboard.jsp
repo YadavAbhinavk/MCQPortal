@@ -21,7 +21,13 @@ transition:0.3s;
 </style>
 </head>
 <body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
-
+<%@include file="cache-remove.jsp"%>
+	<%
+	User user = (User) session.getAttribute("user");
+	if (user == null) {
+		response.sendRedirect("home");
+	}
+	%>
 <nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">

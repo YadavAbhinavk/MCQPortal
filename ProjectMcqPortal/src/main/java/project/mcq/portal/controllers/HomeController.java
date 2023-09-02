@@ -7,10 +7,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class HomeController {
+	
 	@GetMapping(value = { "/","/home" })
 	public ModelAndView home(Model model) {
-		model.addAttribute("name", "Abhinav");
-		System.out.println("Home page");
+		
 		return new ModelAndView("home");
 	}
 }

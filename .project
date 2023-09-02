@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>MCQPortal</name>
+	<comment></comment>
+	<projects>
+		<project>ProjectMcqPortal</project>
+		<project>Servers</project>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+	</natures>
+</projectDescription>

@@ -28,53 +28,45 @@ public class UserController {
 
 	@Autowired
 	UserDao userDao;
-	
+
 	@Autowired
 	UserTestDao userTestDao;
-	
+
 	@Autowired
 	TestDao testDao;
+
 //	User login and register
-	@RequestMapping(value = "/login")
+	@GetMapping(value = "/login")
 	public ModelAndView login(HttpSession session) {
-		User user = (User)session.getAttribute("user");
-		if(user == null)
-		{
+		User user = (User) session.getAttribute("user");
+		if (user == null) {
 			return new ModelAndView("login");
-		}
-		else
-		{
+		} else {
 			return new ModelAndView("redirect:/user_dashboard");
 		}
 	}
 
-	
 	@PostMapping("/loginForm")
-	public ModelAndView handleAdmin(HttpServletRequest request,@RequestParam("mobile") String mobileNo, @RequestParam("password") String password,
-			Model model) {
+	public ModelAndView handleAdmin(HttpServletRequest request, @RequestParam("mobile") String mobileNo,
+			@RequestParam("password") String password, Model model) {
 
-		try
-		{
+		try {
 			User user = userDao.getUser(mobileNo, password);
 			if (user != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("user", user);
 				model.addAttribute("message", "Successfully logged in !!!!");
 				return new ModelAndView("redirect:/user_dashboard");
-			}	
-			else
-			{
-				model.addAttribute("message","Can't find credentials");
+			} else {
+				model.addAttribute("message", "Can't find credentials");
 				return new ModelAndView("/login");
 			}
-		}
-		catch(DataAccessException e)
-		{
+		} catch (DataAccessException e) {
 			model.addAttribute("message", "Can't find credentials");
 		}
 		return new ModelAndView("redirect:/user_dashboard");
 	}
-	
+
 	@GetMapping(value = "/register")
 	public String register() {
 		return "register";
@@ -91,62 +83,42 @@ public class UserController {
 		if (result > 0) {
 			model.addAttribute("message", "Successfully Registered in");
 			return new ModelAndView("login");
-		} 
-		else 
-		{
+		} else {
 			model.addAttribute("message", "Not able to registered");
 			return new ModelAndView("register");
 		}
 	}
 //	User Login and SingUp ends here
-	
-	@RequestMapping("/user_dashboard")
-	public ModelAndView userDashboad(Model model,HttpSession session)
-	{
-		User user = (User)session.getAttribute("user");
 
-		if(user != null)
-		{
+	@GetMapping("/user_dashboard")
+	public ModelAndView userDashboad(Model model) {
 		List<Test> listOfTests = testDao.getListOfTests();
-		model.addAttribute("listOfTests",listOfTests);
+		model.addAttribute("listOfTests", listOfTests);
 		return new ModelAndView("user_dashboard");
-		}
-		else
-		{
+
+	}
+
+	// Logout method here
+	@GetMapping("/logout_user")
+	public String processLogout(HttpSession session, Model attr) {
+
+		System.out.println(session.getAttribute("user"));
+		session.invalidate();
+		attr.addAttribute("message", "Logged out successfully");
+		return "redirect:/home";
+	}
+
+	// Show completed tests
+	@GetMapping("/user_test")
+	public ModelAndView userTest(Model model, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		if (user != null) {
+			List<UserTest> userListOfTests = userTestDao.getAllUserTest(user.getUserId());
+			model.addAttribute("userListOfTests", userListOfTests);
+			return new ModelAndView("user_test");
+		} else {
 			return new ModelAndView("redirect:/home");
 		}
 	}
-	
-	//Logout method here
-		@GetMapping("/logout_user")
-		public String processLogout(HttpSession session, 
-				Model attr) {
 
-			System.out.println(session.getAttribute("user"));
-			session.invalidate();
-			attr.addAttribute("message", "Logged out successfully");
-			return "redirect:/home";
-		}
-		
-		// Show completed tests
-				@RequestMapping("/user_test")
-				public ModelAndView userTest(Model model,HttpSession session)
-				{
-					System.out.println("In user test");
-					User user = (User)session.getAttribute("user");
-
-					if(user != null)
-					{
-					List<UserTest> userListOfTests = userTestDao.getAllUserTest(user.getUserId());
-					model.addAttribute("userListOfTests",userListOfTests);
-					return new ModelAndView("user_test");
-					}
-					else
-					{
-						return new ModelAndView("redirect:/home");
-					}
-				}
-		
-	
-	
 }

@@ -11,8 +11,13 @@
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
 </head>
 <body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
-	<%@include file="cache-remove.jsp"%>
-	
+<%@include file="cache-remove.jsp"%>
+	<%
+	User user = (User) session.getAttribute("user");
+	if (user == null) {
+		response.sendRedirect("home");
+	}
+	%>
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
@@ -31,9 +36,11 @@
 	%>
 	
 	<div class="start">
-		<div class="quiz_header">Welcome to ${tag} test.</div>
+		<div class="quiz_header">Welcome to ${tag} test.
+		<div>Time left = <span id="timer"></span></div>
+		</div>
 	</div>
-	  <div>Time left = <span id="timer"></span></div>
+	  
 	<form action="<%=request.getContextPath()%>/processSelectedRadioValues/<%=tag %>"
 		method="post" id = "testForm">
 		<%

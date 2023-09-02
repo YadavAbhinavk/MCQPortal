@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS `questions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `questions` (
-  `question_id` int NOT NULL,
+  `question_id` int NOT NULL AUTO_INCREMENT,
   `tag` varchar(50) NOT NULL,
   `question_name` varchar(255) NOT NULL,
   `option1` varchar(100) NOT NULL,

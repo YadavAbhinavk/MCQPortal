@@ -8,14 +8,31 @@
 <head>
 <%@include file="header.jsp"%>
 </head>
-<body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
+<body
+	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
+	<%@include file="cache-remove.jsp"%>
+	<%
+	User user = (User) session.getAttribute("user");
+	if (user == null) {
+		response.sendRedirect("home");
+	}
+	%>
+	<nav class="navbar">
+		<div class="logo">
+			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
+			Quiz<span>Vault</span>
+		</div>
 
-	<%@include file="navbar.jsp"%>
-	
+		<ul class="nav-links" id="navLinks">
+			<li><a href="<%=request.getContextPath()%>/logout">Logout</a></li>
+		</ul>
+
+	</nav>
+
 	<div class="table">
 		<div class="table_header">
 			<p>User Dashboard</p>
-			
+
 		</div>
 		<div class="table_section">
 			<table>
@@ -25,7 +42,7 @@
 						<th>Tag</th>
 						<th>Submission Time</th>
 						<th>Score</th>
-						
+
 
 					</tr>
 				</thead>
@@ -43,22 +60,21 @@
 					<td><%=userTest.getTag()%></td>
 					<td><%=userTest.getSubmissionTime()%></td>
 					<td><%=userTest.getScore()%></td>
-					
-					
+
+
 				</tr>
 				<%
-		}
-		}
-		%>
+				}
+				}
+				%>
 			</table>
 		</div>
 	</div>
 	<div>
-	<a href = "<%=request.getContextPath()%>/user_dashboard">
-		Return to dashboard
-	</a>
+		<a href="<%=request.getContextPath()%>/user_dashboard"> Return to
+			dashboard </a>
 	</div>
-	
+
 
 </body>
 </html>
