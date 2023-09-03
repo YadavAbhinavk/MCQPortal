@@ -104,7 +104,7 @@
 							<a href="<%=application.getContextPath()%>/update_tests/<%=test.getTag()%>" id="edit_icon">
 							<i class="fa-solid fa-pen-to-square" ></i>
 							</a>
-							<a href="javascript:void(0);" onclick="confirmDelete('<%= test.getTag() %>','<%= test.getIsAvailable() %>')"><i
+							<a href="<%=application.getContextPath()%>/delete_test/<%=test.getTag()%>" onclick="confirmDelete('<%= test.getTag() %>','<%= test.getIsAvailable() %>')"><i
 								class="fa-solid fa-trash"></i></a>
 
 					</td>

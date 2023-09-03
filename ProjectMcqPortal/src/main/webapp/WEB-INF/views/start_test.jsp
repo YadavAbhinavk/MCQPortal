@@ -12,30 +12,30 @@
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-tr 
-{
-border-bottom:none;
+tr {
+	border-bottom: none;
 }
 </style>
 </head>
-<body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
+<body
+	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
 
-<%@include file="cache-remove.jsp"%>
+	<%@include file="cache-remove.jsp"%>
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user == null) {
 		String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/home");
+		response.sendRedirect(contextPath + "/home");
 	}
 	%>
-	
+
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
 			Quiz<span>Vault</span>
 		</div>
 	</nav>
-	
+
 	<%
 	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
@@ -46,15 +46,19 @@ border-bottom:none;
 	StringJoiner stringJoiner = new StringJoiner(", ");
 	if (isAvailable != null) {
 	%>
-	
+
 	<div class="start">
-		<div class="quiz_header">Welcome to ${tag} test.
-		<div>Time left = <span id="timer"></span></div>
+		<div class="quiz_header">
+			Welcome to ${tag} test.
+			<div>
+				Time left = <span id="timer"></span>
+			</div>
 		</div>
 	</div>
-	  
-	<form action="<%=request.getContextPath()%>/processSelectedRadioValues/<%=tag %>"
-		method="post" id = "testForm">
+
+	<form
+		action="<%=request.getContextPath()%>/processSelectedRadioValues/<%=tag%>"
+		method="post" id="testForm">
 		<%
 		if (listOfQuestions != null) {
 			int index = 0;
@@ -69,8 +73,8 @@ border-bottom:none;
 
 					<h2 style="text-align: justify; font-size: 20px;">
 						Question
-						<%=index%>.
-						<span style="text-align: justify; font-size: 12px;"><%=ques.getQuestionName()%></span></h2>
+						<%=index%>. <span style="text-align: justify; font-size: 12px;"><%=ques.getQuestionName()%></span>
+					</h2>
 
 					<tr>
 						<td><input type="number" name="questionId"
@@ -82,7 +86,7 @@ border-bottom:none;
 					</tr>
 
 					<tr>
-						<td >
+						<td>
 							<p class="answer-para">
 								<input class="show-answer" type="radio" id=<%=index%>
 									name="answer<%=ques.getQuestionId()%>" value="option2"><%=ques.getOption2()%></p>
@@ -117,18 +121,20 @@ border-bottom:none;
 		}
 		}
 		%>
-		<br> <br>
-		<input type="hidden" name="submissionTime" id="submissionTime" />
+		<br> <br> <input type="hidden" name="submissionTime"
+			id="submissionTime" />
 		<button type="submit" value="Submit" class="quiz_button">Submit</button>
-	
-	
-	
 
-</form>
- <br>
-<br>
 
-<script>
+
+
+	</form>
+	<br>
+	<br>
+
+	<script>
+
+
 var time = 2*<%=listOfQuestions.size()%>;
 
 document.getElementById('timer').innerHTML =
@@ -194,7 +200,7 @@ window.addEventListener(
 
 
 function checkTestStatus() {
-var tag = '<%= tag %>'; 
+var tag = '<%=tag%>'; 
 console.log(tag);
 $.ajax({
 	 // URL to your checkTestStatus endpoint
@@ -213,6 +219,7 @@ $.ajax({
 }
 // Check the test status every second (1 second)
 setInterval(checkTestStatus, 3000);
+
     </script>
 </body>
 </html>
