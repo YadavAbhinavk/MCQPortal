@@ -22,19 +22,6 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public User getUser(String mobileNo,String password)
-	{
-		
-        
-        String query = "SELECT * FROM users WHERE mobile_no = ? AND password = ?";
-		User user = null;
-		if(mobileNo != null && !mobileNo.isEmpty() ) {
-			if( password != null && !password.isEmpty()) {
-				user = jdbcTemplate.queryForObject(query, new UserRowMapper(), mobileNo, password); 
-				System.out.println("User : " + user);
-			}
-=======
 	public int insertUser(User user) {
 		try {
 			String insertQuery = "INSERT INTO " + "users " + "(mobile_no, name, password)" + "VALUES (?,?,?)";
@@ -44,7 +31,6 @@ public class UserDaoImpl implements UserDao {
 
 			e.printStackTrace();
 			return -1;
->>>>>>> branch 'main' of https://github.com/YadavAbhinavk/MCQPortal.git
 		}
 
 	}
@@ -57,7 +43,6 @@ public class UserDaoImpl implements UserDao {
 			User user = null;
 			if (mobileNo != null && !mobileNo.isEmpty()) {
 				if (password != null && !password.isEmpty()) {
-					System.out.println("User : " + user);
 					user = jdbcTemplate.queryForObject(query, new UserRowMapper(), mobileNo, password);
 				}
 			}

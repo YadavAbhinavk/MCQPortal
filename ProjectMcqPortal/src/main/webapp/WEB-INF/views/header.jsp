@@ -6,8 +6,8 @@
 
     <!-- css files -->
     <link rel="stylesheet" href="<c:url value='/resources/css/home.css' />" >
-    <link rel="stylesheet" href="<c:url value="/resources/css/indexs.css" />">
-    <link rel="stylesheet" href="<c:url value="/resources/css/style.css" />">
+    <link rel="stylesheet" href="<c:url value="/resources/css/index.css" />">
+    <link rel="stylesheet" href="<c:url value="/resources/css/styles.css" />">
 
     <!-- import files -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

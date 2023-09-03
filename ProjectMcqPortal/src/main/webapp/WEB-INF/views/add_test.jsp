@@ -29,8 +29,9 @@
 	<div class="container">
 		<h1>Test Page</h1>
 		<form action="testForm" method="post">
+		<h4>Test name cannot be update later,so choose name only once.</h4>
 			<div class="box">
-				<input type="text" name="tag" placeholder="Enter Tag">
+				<input type="text" name="tag" placeholder="Enter Test Name">
 			</div>
 
 			<div class="box">
@@ -38,6 +39,16 @@
 					placeholder="Enter number of questions" min="0" max="50">
 			</div>
 			<input type="submit" class="btn" value="Submit">
+			
+			<span id="message">
+			<%
+			String msg = (String) request.getAttribute("message");
+			if (msg != null) {%>
+				<%= msg %>
+			<%}
+			%>
+			</span>
+			
 		</form>
 	</div>
 

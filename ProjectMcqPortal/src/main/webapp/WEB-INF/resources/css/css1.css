@@ -83,7 +83,10 @@
 .quiz_header {
 	padding: 4rem;
 }
- 
+.quiz_header td
+{
+	font-size: 15px;
+}  
 .quiz_container h2 {
 	padding: 1rem;
 	text-align: center;

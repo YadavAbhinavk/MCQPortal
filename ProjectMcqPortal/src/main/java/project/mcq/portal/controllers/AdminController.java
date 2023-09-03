@@ -10,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,13 +54,12 @@ public class AdminController {
 			if (admin != null) {
 				HttpSession session = request.getSession();
 				session.setAttribute("admin", admin);
-				model.addAttribute("message", "Successfully logged in !!!!");
 				return new ModelAndView("redirect:/admin_dashboard");
 			}	
 			else
 			{
-				model.addAttribute("message","Can't find credentials");
-				return new ModelAndView("/admin");
+				model.addAttribute("message","Invalid Credentials");
+				return new ModelAndView("admin_login");
 			}
 		}
 		catch(DataAccessException e)
@@ -70,7 +70,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/admin_dashboard")
-	public ModelAndView adminDashboad(Model model,HttpSession session)
+	public ModelAndView adminDashboad(Model model,HttpSession session,@ModelAttribute("message") String message)
 	{
 		Admin admin = (Admin)session.getAttribute("admin");
 
@@ -87,16 +87,5 @@ public class AdminController {
 		
 	}
 //	Admin Login ends here
-
-//Logout method here	
-	@GetMapping("/logout")
-	public String processLogout(HttpSession session, 
-			Model attr) {
-
-		System.out.println(session.getAttribute("admin"));
-		session.invalidate();
-		attr.addAttribute("message", "Logged out successfully");
-		return "redirect:/home";
-	}
 }
 

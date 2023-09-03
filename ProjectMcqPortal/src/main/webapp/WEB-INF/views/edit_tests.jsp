@@ -7,6 +7,7 @@
 <html>
 <head>
 <%@ include file="header.jsp"%>
+
 </head>
 <body
 	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
@@ -24,7 +25,6 @@
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
 			Quiz<span>Vault</span>
 		</div>
-
 		<ul class="nav-links" id="navLinks">
 
 			<li><a href="<%=request.getContextPath()%>/admin_dashboard">View
@@ -40,9 +40,33 @@
 
 	<%
 	String tag = (String) request.getAttribute("tag");
-	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
+	List<Question> listOfQuestions = (List<Question>)request.getAttribute("listOfQuestions");
 	String message = (String) request.getAttribute("message");
 	String isAvailable = (String) request.getAttribute("isAvailable");
+	
+	// Number of questions per page
+    int questionsPerPage = 10;
+
+    // Calculate the total number of pages
+    int totalPages = (listOfQuestions.size() + questionsPerPage - 1) / questionsPerPage;
+
+    // Get the current page parameter
+    String currentPageParam = request.getParameter("p");
+    int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
+    // Check if currentPageParam is a valid integer
+    if (currentPageParam != null) {
+        try {
+            currentPage = Integer.parseInt(currentPageParam);
+            // Ensure that currentPage is within valid bounds
+            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+        } catch (NumberFormatException e) {
+            // Handle invalid page number gracefully
+            currentPage = 1; // Redirect to the first page
+        }
+    }
+    // Calculate the start and end indices for the current page
+    int startIndex = (currentPage - 1) * questionsPerPage;
+    int endIndex = Math.min(startIndex + questionsPerPage, listOfQuestions.size());
 	if (isAvailable != null) {
 	%>
 	<div class="table">
@@ -51,6 +75,12 @@
 			<p><%=tag%>
 				Test
 			</p>
+			<span id="message">
+			<%String msg = (String)request.getAttribute("message");if (msg != null) { %>
+		    <%= msg %>
+		    
+		  <% } %>
+		  </span>
 			<div style="display: flex;">
 				<form action="<%=request.getContextPath()%>/add_question/<%=tag%>"
 					method="get">
@@ -83,6 +113,7 @@
 		<div class="table_section">
 			<table>
 				<thead>
+				<%if (listOfQuestions != null) { %>
 					<tr>
 						<th>S.No</th>
 						<th>Question Name</th>
@@ -96,44 +127,55 @@
 					</tr>
 				</thead>
 				<%
-				if (listOfQuestions != null) {
-					int index = 0;
-					for (Question ques : listOfQuestions) {
-						index++;
+				int index = startIndex + 1; // Start index for the current page
+                for (int i = startIndex; i < endIndex; i++) {
+                    Question ques = listOfQuestions.get(i);
 				%>
 				<tr>
-					<td><%=index%></td>
-
-					<td><%=ques.getQuestionName()%></td>
+					<td><%=index++%></td>
+					<td><c:out value="<%= ques.getQuestionName() %>" escapeXml="true" /></td>
 					<td><%=ques.getOption1()%></td>
 					<td><%=ques.getOption2()%></td>
 					<td><%=ques.getOption3()%></td>
 					<td><%=ques.getOption4()%></td>
 					<td><%=ques.getCorrectAnswer()%></td>
 					<td>
-						<button style="color: white;">
+
 							<a
-								href="<%=application.getContextPath()%>/update_ques/<%=ques.getQuestionId()%>"><i
+								href="<%=application.getContextPath()%>/update_ques/<%=ques.getQuestionId()%>" id="edit_icon"><i
 								class="fa-solid fa-pen-to-square"></i></a>
-						</button>
-						<button>
 							<a
-								href="<%=application.getContextPath()%>/delete_ques/<%=ques.getQuestionId()%>/<%=ques.getTag()%>"><i
+								href="<%=application.getContextPath()%>/delete_ques/<%=ques.getQuestionId()%>/<%=ques.getTag()%>"id="delete_icon"><i
 								class="fa-solid fa-trash"></i></a>
-						</button>
 					</td>
 				</tr>
 				<%
 				}
 				}
 				%>
+				
 			</table>
 		</div>
 		<br>
 		<br>
 	</div>
+<br><br>
+<!-- Pagination controls -->
+<div class="center">
+<div class="pagination">
+        <a href="<%= request.getContextPath() %>/update_tests/<%= tag %>?p=1">&laquo;</a>
+        <%
+            for(int p = 1; p <= totalPages; p++) {
+        %>
+        <a href="<%= request.getContextPath() %>/update_tests/<%= tag %>?p=<%= p %>"
+               <%= (p == currentPage) ? "class='active'" : "" %>><%= p %></a>
+        <%
+            }
+        %>
+        <a href="<%= request.getContextPath() %>/update_tests/<%= tag %>?p=<%= totalPages %>">&raquo;</a>
+</div>
+</div>
 
-
-
+<script src="<c:url value="/resources/js/script.js"/>"></script>
 </body>
 </html>

@@ -4,13 +4,16 @@
 <%@page import="java.util.*"%>
 <%@page isELIgnored="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
 <%@ include file="header.jsp"%>
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
+
 <%@include file="cache-remove.jsp"%>
 	<%
 	User user = (User) session.getAttribute("user");
@@ -18,6 +21,7 @@
 		response.sendRedirect("home");
 	}
 	%>
+	
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
@@ -29,6 +33,7 @@
 	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
 	String message = (String) request.getAttribute("message");
+	//Correct answer list
 	List<String> correct_ans = new ArrayList<String>();
 	String isAvailable = (String) request.getAttribute("isAvailable");
 	StringJoiner stringJoiner = new StringJoiner(", ");
@@ -58,7 +63,7 @@
 					<h2 style="text-align: justify; font-size: 20px;">
 						Question
 						<%=index%>.
-						<%=ques.getQuestionName()%></h2>
+						<span style="text-align: justify; font-size: 12px;"><%=ques.getQuestionName()%></span></h2>
 
 					<tr>
 						<td><input type="number" name="questionId"
@@ -156,14 +161,51 @@ document.getElementById("testForm").addEventListener("submit", function() {
 	window.setInterval(function(){ 
 		var submissionTimeField = document.getElementById("submissionTime");
 		submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
-    
+  
 	document.getElementById("testForm").submit();
-        	
+      	
 }, time*60*1000);
-	
-        		
-        		
 
+
+// Flag to track form submission
+var formSubmitted = false;
+
+// Set the formSubmitted flag to true when the form is submitted
+document.getElementById("testForm").addEventListener("submit",
+		function() {
+			formSubmitted = true;
+		});
+
+// Warn users when leaving the page without submitting the form
+window.addEventListener(
+				"beforeunload",
+				function(event) {
+					if (!formSubmitted) {
+						alert("You have an unfinished test. Are you sure you want to leave?");
+					}
+				});
+
+
+function checkTestStatus() {
+var tag = '<%= tag %>'; 
+console.log(tag);
+$.ajax({
+	 // URL to your checkTestStatus endpoint
+    url: "<%=request.getContextPath()%>/checkTestStatus?tag="+tag,
+    success: function(data) {
+    	
+        if (data === 'inactive') {
+        	
+            alert('The test is no longer active.');
+            
+            // Redirect to user_dashboard
+            window.location.href = '<%=request.getContextPath()%>/user_dashboard';
+        }
+    }
+});
+}
+// Check the test status every second (1 second)
+setInterval(checkTestStatus, 3000);
     </script>
 </body>
 </html>

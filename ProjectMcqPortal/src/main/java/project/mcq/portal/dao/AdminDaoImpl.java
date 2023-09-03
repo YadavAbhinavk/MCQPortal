@@ -26,20 +26,16 @@ public class AdminDaoImpl implements AdminDao {
 		try {
 			if (username != null && !username.isEmpty()) {
 				if (password != null && !password.isEmpty()) {
-					System.out.println("Admin : " + admin);
 					admin = jdbcTemplate.queryForObject(query, new AdminRowMapper(), username, password);
 				}
 			}
 		} catch (EmptyResultDataAccessException e) {
-
 			System.err.println("No admin found with the provided credentials.");
 			e.printStackTrace();
 		} catch (Exception e) {
-
 			System.err.println("An error occurred while retrieving admin information.");
 			e.printStackTrace();
 		}
-
 		return admin;
 	}
 

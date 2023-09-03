@@ -7,16 +7,17 @@
 <html>
 <head>
 <%@include file="header.jsp"%>
+<link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
 </head>
 <body>
-<%@include file="cache-remove.jsp"%>
+	<%@include file="cache-remove.jsp"%>
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
 	if (admin == null) {
 		response.sendRedirect("home");
 	}
 	%>
-	
+
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
@@ -24,52 +25,62 @@
 		</div>
 	</nav>
 
+	<div class="start">
+		<div class="quiz_header">
+			<h1>Add ${tag} Question here</h1>
+			<%
+			String msg = (String) request.getAttribute("message");
+			if (msg != null) {
+				out.print(msg);
+			}
+			%>
+		</div>
+	</div>
 
-	<h1>Add ${tag} Question here</h1>
-	<%
-	String msg = (String) request.getAttribute("message");
-	if (msg != null) {
-		out.print(msg);
-	}
-	%>
-	<h2></h2>
+	
 	<div class="ques_container">
 		<c:forEach var="i" begin="1" end="${numOfQues}">
-
-
-			<div class="ques_form">
+			
 
 				<form action="<%= request.getContextPath() %>/quesForm/${tag}"
-					method="post" id="form${i}"  onsubmit="return checkform(this)">
+					method="post" id="form${i}" class="ques_form" onsubmit="return checkform(this)">
 					<div class="box1">
 						<div>
 							<label for="ques_name${i}">Question:</label>
 						</div>
-						<textarea name="ques_name" id="" cols="50" rows="7" required></textarea>
+						<textarea name="ques_name" id=""  required></textarea>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option1${i}">Option1:</label>
 						</div>
-						<input type="text" name="option1" id="" required>
+						<textarea name="option1" id="" required>
+
+            </textarea >
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option2${i}">Option2:</label>
 						</div>
-						<input type="text" name="option2" id="" required>
+						<textarea name="option2" id="" required>
+
+            </textarea >
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option3${i}">Option3:</label>
 						</div>
-						<input type="text" name="option3" id="" required>
+						<textarea name="option3" id="" required>
+
+            </textarea>
 					</div>
 					<div class="box1">
 						<div>
 							<label for="option4${i}">Option4:</label>
 						</div>
-						<input type="text" name="option4" id="" required>
+						<textarea name="option4" id="" required>
+
+            </textarea>
 					</div>
 					<div class="box1">
 						<div>
@@ -77,6 +88,7 @@
 						</div>
 
 						<select name="answer" id="cars">
+						    <option> Please select option</option>
 							<option value="option1">Option1</option>
 							<option value="option2">Option2</option>
 							<option value="option3">Option3</option>
@@ -86,7 +98,7 @@
 					</div>
 					<input type="submit" value="Submit" class="mybtn">
 				</form>
-			</div>
+			
 
 			<br>
 			<br>
@@ -128,6 +140,6 @@
         </script>
 		</c:forEach>
 	</div>
-	<a href="<%=request.getContextPath()%>/admin_dashboard"><button>Back</button></a>
+    
 </body>
 </html>

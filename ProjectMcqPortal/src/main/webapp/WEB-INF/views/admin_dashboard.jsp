@@ -7,6 +7,9 @@
 <html>
 <head>
 <%@include file="header.jsp"%>
+<style>
+
+</style>
 </head>
 <body
 	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
@@ -34,6 +37,12 @@
 		<div class="table_header">
 			<p>Admin Dashboard</p>
 			<div>
+			
+			<span id="message">
+			<%String msg = (String)request.getAttribute("message");if (msg != null) { %>
+		    <%= msg %>
+		  <% } %>
+		  </span>
 				<a href="<%=request.getContextPath()%>/add_test"><button
 						class="add_new">+Add New Test</button></a>
 			</div>
@@ -43,7 +52,7 @@
 				<thead>
 					<tr>
 						<th>S.No</th>
-						<th>Tag</th>
+						<th>Test Name</th>
 						<th>Total Questions</th>
 						<th>Users appeared</th>
 						<th>Status</th>
@@ -52,31 +61,49 @@
 					</tr>
 				</thead>
 				<%
-				List<Test> listOfTests = (List) request.getAttribute("listOfTests");
-				String message = (String) request.getAttribute("messagee");
-				if (listOfTests != null) {
+				List<Test> listOfTests = (List<Test>)request.getAttribute("listOfTests");
+				// Number of questions per page
+			    int testsPerPage = 8;
 
-					int index = 0;
-					for (Test test : listOfTests) {
-						index++;
+			    // Calculate the total number of pages
+			    int totalPages = (listOfTests.size() + testsPerPage - 1) / testsPerPage;
+
+			    // Get the current page parameter
+			    String currentPageParam = request.getParameter("p");
+			    int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
+			    
+			    // Check if currentPageParam is a valid integer
+			    if (currentPageParam != null) {
+			        try {
+			            currentPage = Integer.parseInt(currentPageParam);
+			            // Ensure that currentPage is within valid bounds
+			            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+			        } catch (NumberFormatException e) {
+			            // Handle invalid page number gracefully
+			            currentPage = 1; // Redirect to the first page
+			        }
+			    }
+			    // Calculate the start and end indices for the current page
+			    int startIndex = (currentPage - 1) * testsPerPage;
+			    int endIndex = Math.min(startIndex + testsPerPage,  listOfTests.size());
+			    		
+				if (listOfTests != null) {
+					int index = startIndex + 1; // Start index for the current page
+                    for (int i = startIndex; i < endIndex; i++) {
+                        Test test = listOfTests.get(i);
 				%>
 				<tr>
-					<td><%=index%></td>
+					<td><%=index++%></td>
 					<td><%=test.getTag()%></td>
 					<td><%=test.getNumberOfQuestions()%></td>
 					<td><%=test.getNumberOfUsers()%></td>
 					<td><%=test.getIsAvailable()%></td>
 					<td>
-						<button style="color: white;">
-							<a
-								href="<%=application.getContextPath()%>/update_tests/<%=test.getTag()%>"><i
-								class="fa-solid fa-pen-to-square"></i></a>
-						</button>
-						<button>
-							<a
-								href="<%=application.getContextPath()%>/delete_test/<%=test.getTag()%>"><i
-								class="fa-solid fa-trash"></i></a>
-						</button>
+						
+							<a href="<%=application.getContextPath()%>/update_tests/<%=test.getTag()%>" id="edit_icon">
+							<i class="fa-solid fa-pen-to-square" ></i>
+							</a>
+
 					</td>
 				</tr>
 				<%
@@ -86,7 +113,22 @@
 			</table>
 		</div>
 	</div>
-
-
+<br><br>
+<!-- Pagination controls -->
+<div class="center">
+<div class="pagination">
+        <a href="<%= request.getContextPath() %>/admin_dashboard/?p=1">&laquo;</a>
+        <%
+            for(int p = 1; p <= totalPages; p++) {
+        %>
+        <a href="<%= request.getContextPath() %>/admin_dashboard/?p=<%= p %>"
+               <%= (p == currentPage) ? "class='active'" : "" %>><%= p %></a>
+        <%
+            }
+        %>
+        <a href="<%= request.getContextPath() %>/admin_dashboard/?p=<%= totalPages %>">&raquo;</a>
+</div>
+</div>
+<script src="<c:url value="/resources/js/script.js"/>"></script>
 </body>
 </html>

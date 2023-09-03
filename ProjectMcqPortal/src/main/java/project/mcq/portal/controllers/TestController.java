@@ -2,6 +2,7 @@ package project.mcq.portal.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -11,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import project.mcq.portal.dao.QuestionDao;
 import project.mcq.portal.dao.TestDao;
@@ -39,97 +43,96 @@ public class TestController {
 	
 	
 //	Test creation starts here
-	@RequestMapping("/add_test")
-	public ModelAndView addTest() {
+	@GetMapping("/add_test")
+	public ModelAndView addTest(@ModelAttribute("message")String message,Model model) {
+		model.addAttribute("message",message);
 		return new ModelAndView("add_test");
 	}
 	
 
 	@PostMapping(value = "/testForm")
 	public ModelAndView addTestWithTag(@RequestParam("tag") String tag, @RequestParam("questions") int numOfQues,
-			Model model) {
+			Model model,RedirectAttributes redirectAttributes) {
 		Test test = new Test();
 		
 		int check = testDao.getTest(tag), result = 0;
 		if (check > 0) {
-			model.addAttribute("message", "Test Already exists");
+			redirectAttributes.addFlashAttribute("message", "Test Already exists");
 		} else {
 			test.setTag(tag);
-
 			result = testDao.insertTest(test);
 		}
 		if (result > 0) {
 			model.addAttribute("tag", tag);
 			model.addAttribute("numOfQues", numOfQues);
-
 			return new ModelAndView("add_questions");
 		}
-		model.addAttribute("message", "Not able to create a new test");
-		return new ModelAndView("add_test");
+		return new ModelAndView("redirect:/add_test");
 	}
 //	Test creation ends here
 
 //Test deletion function starts here
 	@GetMapping("/delete_test/{tag}")
-	public String deleteTest(@PathVariable("tag") String tag, Model model) {
+	public String deleteTest(@PathVariable("tag") String tag,RedirectAttributes redirectAttributes) {
 
 		int result = testDao.deleteTest(tag);
-		List<Test> listOfTests = testDao.getListOfTests();
-		model.addAttribute("listOfTests", listOfTests);
 		if (result > 0) {
-			model.addAttribute("message", "Test deleted successfully");
+			redirectAttributes.addFlashAttribute("message", "Test deleted successfully");
 		} else {
-			model.addAttribute("message", "Test was not deleted");
+			redirectAttributes.addFlashAttribute("message", "Test was not deleted");
 		}
-		return "admin_dashboard";
+		return "redirect:/admin_dashboard";
 	}
 
 //Test deletion ends here
 
 // Test update function starts here
 	@GetMapping("/update_tests/{tag}")
-	public String updateTest(@PathVariable("tag") String tag, Model model) {
+	public String updateTest(@PathVariable("tag") String tag,@ModelAttribute("message") String message, Model model) {
 
 		String available = testDao.getAvailability(tag);
 		List<Question> listOfQuestions = quesDao.getAllQuestionByTag(tag);
 		model.addAttribute("listOfQuestions", listOfQuestions);
 		model.addAttribute("tag",tag);
 		model.addAttribute("isAvailable",available);
-		
+		model.addAttribute("message",message);
 		return "edit_tests";
 	}
 
 // Test update function ends here
 	
-	@RequestMapping(path="/option/{tag}")
-	public String getAvailability(@PathVariable("tag") String tag,@RequestParam("isAvailable") String available,Model model)
+	@GetMapping("/option/{tag}")
+	public String getAvailability(@PathVariable("tag") String tag,@RequestParam("isAvailable") String available,RedirectAttributes redirectAttributes)
 	{
 		Test test = new Test();
 		test.setTag(tag);
+		List<Test> listOfTest = testDao.getListOfTests();
+		int num = 0;
+		for(int i =0;i < listOfTest.size();i++)
+		{
+			if(listOfTest.get(i).getTag().equalsIgnoreCase(tag))
+			{
+				num = listOfTest.get(i).getNumberOfQuestions();
+			}
+		}
+		if(num == 0 && available.equalsIgnoreCase("active"))
+		{
+			redirectAttributes.addFlashAttribute("message","Test cannot be set to active as it has no questions");
+			return "redirect:/update_tests/{tag}";
+		}
 		test.setIsAvailable(available);
 		int result = testDao.updateTest(test);
-		if(result > 0 )
+		if(result > 0)
 		{
-			System.out.println("Updated succesfully");
+			redirectAttributes.addFlashAttribute("message", "Test status updated to "+available);
 		}
-		List<Question> listOfQuestions = quesDao.getAllQuestionByTag(tag);
-		model.addAttribute("listOfQuestions", listOfQuestions);
-		model.addAttribute("tag",tag);
-		model.addAttribute("isAvailable", available);
-		return "edit_tests";
+		else
+		{
+			redirectAttributes.addFlashAttribute("message", "Test status was not updated");
+		}
+		return "redirect:/update_tests/{tag}";
 		
 	}
-//adding single question function starts here
-	@GetMapping("/add_question/{tag}")
-	public ModelAndView addQuestion(@PathVariable("tag") String tag,@RequestParam("numOfQues") int numOfQues,Model model)
-	{
-		model.addAttribute("tag", tag);
-		model.addAttribute("numOfQues", numOfQues);
-
-		return new ModelAndView("add_questions");
-	}
-//adding single question function starts here	
-	
 	
 //	updating a question function starts here
 	@GetMapping("/update_ques/{questionId}")
@@ -138,18 +141,27 @@ public class TestController {
 		
 		Question question = quesDao.getQuestion(quesId);
 		String available = testDao.getAvailability(question.getTag());
-		System.out.println(question);
+		
 		model.addAttribute("questionToUpdate",question);
 		model.addAttribute("isAvailable", available);
 		return "update_ques";
 	}
-	
-	@PostMapping(path="updateForm/{questionId}/{tag}")
+	//adding questions function starts here
+		@GetMapping("/add_question/{tag}")
+		public ModelAndView addQuestion(@PathVariable("tag") String tag, @RequestParam("numOfQues") int numOfQues,
+				Model model) {
+			model.addAttribute("tag", tag);
+			model.addAttribute("numOfQues", numOfQues);
+
+			return new ModelAndView("add_questions");
+		}
+	//adding questions function starts here	
+	@PostMapping("/updateForm/{questionId}/{tag}")
 	public String handleUpdateQuestion(@PathVariable("questionId") int quesId,@PathVariable("tag") String tag,
 			@RequestParam("ques_name") String ques_name,@RequestParam("option1") String option1,
 			@RequestParam("option2") String option2,
 			@RequestParam("option3") String option3,@RequestParam("option4") String option4,
-			@RequestParam("answer") String answer,Model model)
+			@RequestParam("answer") String answer,Model model,RedirectAttributes redirectAttributes)
 	{
 		System.out.println("udpate page"+quesId);
 		Question ques = new Question();
@@ -164,17 +176,14 @@ public class TestController {
 		int result = quesDao.updateQues(ques);
 		if(result > 0)
 		{
-			model.addAttribute("message","Succesfully updated");
-			return "redirect:/update_tests/{tag}";
+			redirectAttributes.addFlashAttribute("message","Succesfully updated question");
 		}
 		else
 		{
-			model.addAttribute("message","Not able to update");
+			redirectAttributes.addFlashAttribute("message","Not able to update the question");
 		}
-		return "update_ques";
+		return "redirect:/update_tests/{tag}";
 	}
-	
-	
 //	updating a question function ends here
 	
 	
@@ -210,43 +219,56 @@ public class TestController {
 //delete questions function starts here	
 	
 	@GetMapping("/delete_ques/{questionId}/{tag}")
-	public String deleteQuestion(@PathVariable("questionId") int quesId,@PathVariable("tag") String tag,Model model)
+	public String deleteQuestion(@PathVariable("questionId") int quesId,@PathVariable("tag") String tag,Model model
+			,RedirectAttributes redirectAttributes)
 	{
 		int result = quesDao.deleteQues(quesId);
 		String available = testDao.getAvailability(tag);
 		if(result == 0)
 		{
-			model.addAttribute("message","Question was not deleted");
+			redirectAttributes.addFlashAttribute("message","Question was not deleted");
 		}
-		model.addAttribute("isAvailable",available);
+		redirectAttributes.addFlashAttribute("message","Question was deleted");
 		return "redirect:/update_tests/{tag}";
 	}
 //delete questions function ends here		
 	
-	//START
+
 	
-	
+//      user test atarts here
 		@GetMapping("/start_test/{tag}")
-		public String startTest(@PathVariable("tag") String tag, Model model) {
+		public String startTest(@PathVariable("tag") String tag, Model model,RedirectAttributes redirectAttributes) {
 
 			String available = testDao.getAvailability(tag);
-			List<Question> listOfQuestions = quesDao.getAllQuestionByTag(tag);
-			model.addAttribute("listOfQuestions", listOfQuestions);
+			List<Question> allQuestions = quesDao.getAllQuestionByTag(tag);
+
+			int maxQuestions = allQuestions.size();
+			int numberOfQuestionsToShow;
+
+			if (maxQuestions >= 25) {
+				numberOfQuestionsToShow = 15;
+			} else if (maxQuestions > 10 && maxQuestions < 25) {
+				numberOfQuestionsToShow = 10;
+			} else {
+				numberOfQuestionsToShow = maxQuestions;
+			}
+
+			List<Question> randomQuestions = new ArrayList<>();
+			if (numberOfQuestionsToShow > 0) {
+				Random random = new Random();
+				for (int i = 0; i < numberOfQuestionsToShow; i++) {
+					int randomIndex = random.nextInt(maxQuestions);
+					randomQuestions.add(allQuestions.get(randomIndex));
+				}
+			}
+			model.addAttribute("listOfQuestions", randomQuestions);
 			model.addAttribute("tag",tag);
 			model.addAttribute("isAvailable",available);
 			
 			return "start_test";
 		}
-		
-		
-		@GetMapping( "/score/{correct_ans}")
-		public String calcScore(@PathVariable List<String> correct_ans) 
-		{
-			System.out.println(correct_ans);
-//			System.out.println(ans);
-			return "score";
-		}
-		
+//      user test ends here		
+//      user test answer submission and calculation atarts here		
 		@PostMapping("/processSelectedRadioValues/{tag}")
 	    public String processSelectedRadio(HttpServletRequest request,@PathVariable("tag") String tag,Model model, HttpSession session) {
 	        // Getting the Radio Button values that were selected
@@ -258,9 +280,9 @@ public class TestController {
 	        String[] questionIds = request.getParameterValues("questionId");
 	        
 	        int score = 0;
+	        if(questionIds != null) {
 	        for(String id:questionIds)
 	        {
-//	        	System.out.println("answer"+id);
 	        	listOfQuestions.add(quesDao.getQuestion(Integer.parseInt(id)));
 	        	selectedRadioValues.add(request.getParameter("answer"+id));
 	        	String ques_answer = quesDao.getAnswer(Integer.parseInt(id));
@@ -274,30 +296,35 @@ public class TestController {
 	        		 scores.add(0);
 	        	 }
 	        }
-	        
-	        System.out.println(selectedRadioValues);
+	        }
 	        model.addAttribute("score",score);
 	        model.addAttribute("listOfScores",scores);
 	        model.addAttribute("listOfQuestions",listOfQuestions);
 	        model.addAttribute("selectedRadioValues",selectedRadioValues);
 	        
-	        System.out.println(scores);
-	        System.out.println(listOfQuestions);
+	        
 	        User user = (User)session.getAttribute("user");
-	        System.out.println("User Details:"+ user);
 	        int userId = user.getUserId();
-	        System.out.println("User Id: "+userId);
 	        UserTest userTest = new UserTest();
 	    	userTest.setScore(score);
 	    	userTest.setTag(tag);
 	    	userTest.setSubmissionTime(request.getParameter("submissionTime"));
 	    	userTest.setUserId(userId);
-	    	System.out.println("User Test: "+userTest);
+	    	
 	    	userTestDao.insertUser(userTest);
-	        
-			
-	        // Redirect to the appropriate view
+	    
 	        return "score"; 
 	    }
+//      user test answer submission and calculation ends here			
+		
+//      method checks if test is active when the user is giving the test		
+		@GetMapping("/checkTestStatus")
+		@ResponseBody
+		public String checkTestStatus(@RequestParam("tag") String tag) {
+			// Retrieve the test status based on the test name
+			String testStatus = testDao.getAvailability(tag); 
+			// Return the test status as a response (active or inactive)
+			return testStatus; 
+		}
 
 }

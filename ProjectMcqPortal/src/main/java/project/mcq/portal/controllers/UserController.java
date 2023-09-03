@@ -10,11 +10,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import project.mcq.portal.dao.TestDao;
 import project.mcq.portal.dao.UserDao;
@@ -37,9 +39,11 @@ public class UserController {
 
 //	User login and register
 	@GetMapping(value = "/login")
-	public ModelAndView login(HttpSession session) {
+	public ModelAndView login(HttpSession session,@ModelAttribute("message") String message,Model model) {
+		
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
+			model.addAttribute("message",message);
 			return new ModelAndView("login");
 		} else {
 			return new ModelAndView("redirect:/user_dashboard");
@@ -48,7 +52,7 @@ public class UserController {
 
 	@PostMapping("/loginForm")
 	public ModelAndView handleAdmin(HttpServletRequest request, @RequestParam("mobile") String mobileNo,
-			@RequestParam("password") String password, Model model) {
+			@RequestParam("password") String password, Model model,RedirectAttributes redirectAttributes) {
 
 		try {
 			User user = userDao.getUser(mobileNo, password);
@@ -58,8 +62,8 @@ public class UserController {
 				model.addAttribute("message", "Successfully logged in !!!!");
 				return new ModelAndView("redirect:/user_dashboard");
 			} else {
-				model.addAttribute("message", "Can't find credentials");
-				return new ModelAndView("/login");
+				redirectAttributes.addFlashAttribute("message","Invalid Credentials");
+				return new ModelAndView("redirect:/login");
 			}
 		} catch (DataAccessException e) {
 			model.addAttribute("message", "Can't find credentials");
@@ -68,44 +72,35 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/register")
-	public String register() {
+	public String register(@ModelAttribute("message") String message,Model model) {
+		model.addAttribute("message",message);
 		return "register";
 	}
 
 	@RequestMapping(value = "/registerForm", method = RequestMethod.POST)
 	public ModelAndView registerUser(@RequestParam("name") String fullName, @RequestParam("mobile") String mobileNo,
-			@RequestParam("password") String password, Model model) {
+			@RequestParam("password") String password, Model model,RedirectAttributes redirectAttributes) {
 		User user = new User();
 		user.setName(fullName);
 		user.setMobileNo(mobileNo);
 		user.setPassword(password);
 		int result = userDao.insertUser(user);
 		if (result > 0) {
-			model.addAttribute("message", "Successfully Registered in");
-			return new ModelAndView("login");
+			redirectAttributes.addFlashAttribute("message", "Successfully Registered in");
+			return new ModelAndView("redirect:/login");
 		} else {
-			model.addAttribute("message", "Not able to registered");
-			return new ModelAndView("register");
+			redirectAttributes.addFlashAttribute("message","Not able to registered");
+			return new ModelAndView("redirect:/register");
 		}
 	}
 //	User Login and SingUp ends here
 
 	@GetMapping("/user_dashboard")
-	public ModelAndView userDashboad(Model model) {
+	public ModelAndView userDashboad(Model model,@ModelAttribute("message")String message) {
 		List<Test> listOfTests = testDao.getListOfTests();
 		model.addAttribute("listOfTests", listOfTests);
+		model.addAttribute("message", message);
 		return new ModelAndView("user_dashboard");
-
-	}
-
-	// Logout method here
-	@GetMapping("/logout_user")
-	public String processLogout(HttpSession session, Model attr) {
-
-		System.out.println(session.getAttribute("user"));
-		session.invalidate();
-		attr.addAttribute("message", "Logged out successfully");
-		return "redirect:/home";
 	}
 
 	// Show completed tests
