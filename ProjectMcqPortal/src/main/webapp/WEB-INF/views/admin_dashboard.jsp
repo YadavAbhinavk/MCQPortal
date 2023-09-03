@@ -18,7 +18,8 @@
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
 	if (admin == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 	<nav class="navbar">
@@ -103,6 +104,8 @@
 							<a href="<%=application.getContextPath()%>/update_tests/<%=test.getTag()%>" id="edit_icon">
 							<i class="fa-solid fa-pen-to-square" ></i>
 							</a>
+							<a href="javascript:void(0);" onclick="confirmDelete('<%= test.getTag() %>','<%= test.getIsAvailable() %>')"><i
+								class="fa-solid fa-trash"></i></a>
 
 					</td>
 				</tr>
@@ -129,6 +132,6 @@
         <a href="<%= request.getContextPath() %>/admin_dashboard/?p=<%= totalPages %>">&raquo;</a>
 </div>
 </div>
-<script src="<c:url value="/resources/js/script.js"/>"></script>
+<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

@@ -14,7 +14,8 @@
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
 	if (admin == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 

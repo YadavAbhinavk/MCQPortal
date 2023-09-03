@@ -14,7 +14,8 @@
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 	<nav class="navbar">
@@ -24,7 +25,7 @@
 		</div>
 
 		<ul class="nav-links" id="navLinks">
-			<li><a href="<%=request.getContextPath()%>/logout">Logout</a></li>
+			<li><a href="<%=request.getContextPath()%>/user_dashboard">View Dashboard</a></li>
 		</ul>
 
 	</nav>
@@ -71,8 +72,6 @@
 		</div>
 	</div>
 	<div>
-		<a href="<%=request.getContextPath()%>/user_dashboard"> Return to
-			dashboard </a>
 	</div>
 
 

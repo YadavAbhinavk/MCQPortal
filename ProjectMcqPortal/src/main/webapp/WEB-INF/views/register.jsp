@@ -14,7 +14,8 @@
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user != null) {
-		response.sendRedirect("user_dashboard");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/user_dashboard");
 	}
 	%>
 	<nav class="navbar">
@@ -29,14 +30,17 @@
 		<div class="box">
 			<form action="registerForm" method="post">
 				<input type="text" name="name" id=""
-					placeholder="Enter your full name" required>
+					placeholder="Enter your full name" oninput="validateName(this)" required>
+					 <p id="nameError" style="color: red;text-shadow:none;"></p>
 		</div>
 		<div class="box">
 			<input type="text" name="mobile" id=""
-				placeholder="Enter mobile number" required>
+				placeholder="Enter mobile number" maxlength="10" oninput="validateMobileNumber(this)" required>
+				<p id="mobileNumberError" style="color: red;text-shadow:none;"></p>
 		</div>
 		<div class="box">
-			<input type="text" name="password" id="" placeholder="Enter password" required>
+			<input type="text" name="password" id="" placeholder="Enter password" maxlength="15" minlength="6" oninput="validatePassword(this)" required>
+			<p id="passwordError" style="color: red;text-shadow:none;"></p>
 		</div>
 		<input type="submit" class="mybtn" value="Register">
 		</form>
@@ -51,5 +55,7 @@
 	</div>
 	<br>
 	<br>
+	
+	<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

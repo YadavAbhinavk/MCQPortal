@@ -25,7 +25,8 @@ transition:0.3s;
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 	
@@ -98,6 +99,7 @@ transition:0.3s;
      
      <td>
      <a href="<%= application.getContextPath() %>/start_test/<%= test.getTag() %>">Start Test</a>
+     
      </td>
      
      </tr>

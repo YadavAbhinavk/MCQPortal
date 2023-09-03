@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -89,7 +88,7 @@ public class TestController {
 // Test update function starts here
 	@GetMapping("/update_tests/{tag}")
 	public String updateTest(@PathVariable("tag") String tag,@ModelAttribute("message") String message, Model model) {
-
+		
 		String available = testDao.getAvailability(tag);
 		List<Question> listOfQuestions = quesDao.getAllQuestionByTag(tag);
 		model.addAttribute("listOfQuestions", listOfQuestions);
@@ -237,8 +236,17 @@ public class TestController {
 	
 //      user test atarts here
 		@GetMapping("/start_test/{tag}")
-		public String startTest(@PathVariable("tag") String tag, Model model,RedirectAttributes redirectAttributes) {
+		public String startTest(@PathVariable("tag") String tag,HttpSession session, Model model,RedirectAttributes redirectAttributes) {
 
+			
+			User user = (User) session.getAttribute("user");
+			if (user == null) {
+				return "redirect:/login";
+			}
+			
+		    
+		    
+		    
 			String available = testDao.getAvailability(tag);
 			List<Question> allQuestions = quesDao.getAllQuestionByTag(tag);
 
@@ -246,7 +254,7 @@ public class TestController {
 			int numberOfQuestionsToShow;
 
 			if (maxQuestions >= 25) {
-				numberOfQuestionsToShow = 15;
+				numberOfQuestionsToShow = 20;
 			} else if (maxQuestions > 10 && maxQuestions < 25) {
 				numberOfQuestionsToShow = 10;
 			} else {
@@ -254,13 +262,23 @@ public class TestController {
 			}
 
 			List<Question> randomQuestions = new ArrayList<>();
-			if (numberOfQuestionsToShow > 0) {
-				Random random = new Random();
-				for (int i = 0; i < numberOfQuestionsToShow; i++) {
-					int randomIndex = random.nextInt(maxQuestions);
-					randomQuestions.add(allQuestions.get(randomIndex));
-				}
+			if (numberOfQuestionsToShow > 0 && maxQuestions > 0) {
+			    Random random = new Random();
+			    
+			    // Create a copy of allQuestions to avoid modifying the original list
+			    List<Question> availableQuestions = new ArrayList<>(allQuestions);
+			    
+			    for (int i = 0; i < numberOfQuestionsToShow; i++) {
+			        if (availableQuestions.isEmpty()) {
+			            // All questions have been added; break the loop
+			            break;
+			        }
+			        
+			        int randomIndex = random.nextInt(availableQuestions.size());
+			        randomQuestions.add(availableQuestions.remove(randomIndex));
+			    }
 			}
+
 			model.addAttribute("listOfQuestions", randomQuestions);
 			model.addAttribute("tag",tag);
 			model.addAttribute("isAvailable",available);
@@ -268,6 +286,7 @@ public class TestController {
 			return "start_test";
 		}
 //      user test ends here		
+		
 //      user test answer submission and calculation atarts here		
 		@PostMapping("/processSelectedRadioValues/{tag}")
 	    public String processSelectedRadio(HttpServletRequest request,@PathVariable("tag") String tag,Model model, HttpSession session) {
@@ -281,7 +300,7 @@ public class TestController {
 	        
 	        int score = 0;
 	        if(questionIds != null) {
-	        for(String id:questionIds)
+	        for(String id:questionIds)	
 	        {
 	        	listOfQuestions.add(quesDao.getQuestion(Integer.parseInt(id)));
 	        	selectedRadioValues.add(request.getParameter("answer"+id));
@@ -301,7 +320,6 @@ public class TestController {
 	        model.addAttribute("listOfScores",scores);
 	        model.addAttribute("listOfQuestions",listOfQuestions);
 	        model.addAttribute("selectedRadioValues",selectedRadioValues);
-	        
 	        
 	        User user = (User)session.getAttribute("user");
 	        int userId = user.getUserId();

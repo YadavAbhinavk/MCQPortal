@@ -15,7 +15,8 @@
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
 	if (admin == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 
@@ -84,7 +85,7 @@
 			<div style="display: flex;">
 				<form action="<%=request.getContextPath()%>/add_question/<%=tag%>"
 					method="get">
-					<input type="number" name="numOfQues" min=0 max=50 value="0"
+					<input type="number" name="numOfQues" min=1 max=20
 						required /> <input type="submit" class="add_new"
 						value="Add questions" style="color: white;" />
 				</form>
@@ -176,6 +177,6 @@
 </div>
 </div>
 
-<script src="<c:url value="/resources/js/script.js"/>"></script>
+<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

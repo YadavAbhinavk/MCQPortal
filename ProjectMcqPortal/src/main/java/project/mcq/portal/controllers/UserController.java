@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.mcq.portal.dao.TestDao;
 import project.mcq.portal.dao.UserDao;
 import project.mcq.portal.dao.UserTestDao;
+import project.mcq.portal.entities.Admin;
 import project.mcq.portal.entities.Test;
 import project.mcq.portal.entities.User;
 import project.mcq.portal.entities.UserTest;
@@ -40,12 +41,17 @@ public class UserController {
 //	User login and register
 	@GetMapping(value = "/login")
 	public ModelAndView login(HttpSession session,@ModelAttribute("message") String message,Model model) {
-		
+		Admin admin = (Admin) session.getAttribute("admin");
 		User user = (User) session.getAttribute("user");
-		if (user == null) {
+		if (user == null && admin == null) {
 			model.addAttribute("message",message);
 			return new ModelAndView("login");
-		} else {
+		}
+		if(admin != null && user == null)
+		{
+			return new ModelAndView("redirect:/home");
+		}
+		else {
 			return new ModelAndView("redirect:/user_dashboard");
 		}
 	}
@@ -72,7 +78,13 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/register")
-	public String register(@ModelAttribute("message") String message,Model model) {
+	public String register(@ModelAttribute("message") String message,HttpSession session,Model model) {
+		Admin admin = (Admin) session.getAttribute("admin");
+		User user = (User) session.getAttribute("user");
+		if(admin != null && user == null)
+		{
+			return "redirect:/home";
+		}
 		model.addAttribute("message",message);
 		return "register";
 	}

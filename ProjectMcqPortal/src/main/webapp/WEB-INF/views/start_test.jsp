@@ -11,6 +11,12 @@
 <%@ include file="header.jsp"%>
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<style>
+tr 
+{
+border-bottom:none;
+}
+</style>
 </head>
 <body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
 
@@ -18,7 +24,8 @@
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 	
@@ -75,7 +82,7 @@
 					</tr>
 
 					<tr>
-						<td>
+						<td >
 							<p class="answer-para">
 								<input class="show-answer" type="radio" id=<%=index%>
 									name="answer<%=ques.getQuestionId()%>" value="option2"><%=ques.getOption2()%></p>

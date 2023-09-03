@@ -13,7 +13,8 @@
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
 	if (admin == null) {
-		response.sendRedirect("home");
+		String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/home");
 	}
 	%>
 
@@ -31,12 +32,12 @@
 		<form action="testForm" method="post">
 		<h4>Test name cannot be update later,so choose name only once.</h4>
 			<div class="box">
-				<input type="text" name="tag" placeholder="Enter Test Name">
+				<input type="text" name="tag" placeholder="Enter Test Name" required>
 			</div>
 
 			<div class="box">
 				<input type="number" name="questions"
-					placeholder="Enter number of questions" min="0" max="50">
+					placeholder="Enter number of questions" min="1" max="20" required>
 			</div>
 			<input type="submit" class="btn" value="Submit">
 			
@@ -52,6 +53,6 @@
 		</form>
 	</div>
 
-	<script src="<c:url value="/resources/js/script.js"/>"></script>
+	<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

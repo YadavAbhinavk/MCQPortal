@@ -10,16 +10,15 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import project.mcq.portal.dao.AdminDao;
 import project.mcq.portal.dao.TestDao;
-import project.mcq.portal.entities.Admin;
-import project.mcq.portal.entities.Test;
+import project.mcq.portal.entities.*;
 
 @Controller
 public class AdminController {
@@ -34,7 +33,8 @@ public class AdminController {
 	@GetMapping("/admin")
 	public ModelAndView admin(HttpSession session) {
 		Admin admin = (Admin)session.getAttribute("admin");
-		if(admin == null)
+		User user = (User)session.getAttribute("user");
+		if(admin == null && user == null)
 		{
 			return new ModelAndView("admin_login");
 		}
@@ -70,7 +70,7 @@ public class AdminController {
 	}
 	
 	@GetMapping("/admin_dashboard")
-	public ModelAndView adminDashboad(Model model,HttpSession session,@ModelAttribute("message") String message)
+	public ModelAndView adminDashboad(Model model,HttpSession session)
 	{
 		Admin admin = (Admin)session.getAttribute("admin");
 

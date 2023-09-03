@@ -13,9 +13,12 @@
 	<%
 	User user = (User) session.getAttribute("user");
 	if (user != null) {
-		response.sendRedirect("user_dashboard");
+		String contextPath = request.getContextPath();
+		response.sendRedirect(contextPath + "/user_dashboard");
+
 	}
 	%>
+	
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
@@ -28,23 +31,24 @@
 		<div class="box">
 			<form action="loginForm" method="post">
 				<input type="text" name="mobile" id=""
-					placeholder="Enter mobile number" required>
+					placeholder="Enter mobile number" maxlength="10" oninput="validateMobileNumber(this)" required>
+					<p id="mobileNumberError" style="color: red;text-shadow:none;"></p>
 		</div>
 		<div class="box">
 			<i class="fa fa-key"></i><input type="password" name="password" id=""
 				placeholder="Enter password" required>
 		</div>
 		<input type="submit" class="mybtn" value="Sign In" />
-		<button class="mybtn">
-			<a href="register">Register</a>
-		</button>
-		<br>
+		
+		<a href="register" class="mybtn" style="text-decoration:none;">Register</a><br>
 		<%
 		String message = (String) request.getAttribute("message");
 		if (message != null) {
 			out.print(message);
 		}
 		%>
-		<div>
+		</form>
+	</div>
+<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>
