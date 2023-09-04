@@ -8,6 +8,13 @@
 <head>
 <%@include file="header.jsp"%>
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
+<script>
+window.addEventListener('popstate', function (event) {
+    // Display an alert when the back button is pressed
+    alert('Back button pressed!');
+    // You can add additional logic or actions here if needed
+});
+</script>
 </head>
 <body>
 	<%@include file="cache-remove.jsp"%>
@@ -25,10 +32,10 @@
 			Quiz<span>Vault</span>
 		</div>
 	</nav>
-
+	<br><br><br>
 	<div class="start">
 		<div class="quiz_header">
-			<h1>Add ${tag} Question here</h1>
+			<h3>Add ${tag} Question here</h3>
 			<%
 			String msg = (String) request.getAttribute("message");
 			if (msg != null) {
@@ -37,7 +44,7 @@
 			%>
 		</div>
 	</div>
-
+	<br><br><br>
 	
 	<div class="ques_container">
 		<c:forEach var="i" begin="1" end="${numOfQues}">
@@ -89,7 +96,7 @@
 						</div>
 
 						<select name="answer" id="cars">
-						    <option> Please select option</option>
+						    
 							<option value="option1">Option1</option>
 							<option value="option2">Option2</option>
 							<option value="option3">Option3</option>
@@ -97,13 +104,14 @@
 						</select>
 
 					</div>
-					<input type="submit" value="Submit" class="mybtn">
+					<input type="submit" value="Submit" class="mybtn" onclick="formSubmitted()">
 				</form>
 			
 
 			<br>
 			<br>
 			<script>
+		    //This javascript will hide the forms when they are submitted
             document.querySelector("#form${i}").addEventListener("submit", function(event) {
                 event.preventDefault();
                 const form = this;
@@ -122,7 +130,7 @@
                 .catch(error => console.error("Error:", error));
             });
             
-            
+            //Checks if all the details are entered
             function checkform(form) {
                 // get all the inputs within the submitted form
                 var inputs = form.getElementsByTagName('input' || 'textarea');
@@ -141,6 +149,19 @@
         </script>
 		</c:forEach>
 	</div>
+    <script>
     
+    //This script is to tell that if all the forms are submitted or not
+    var submittedForms = 0;
+    var totalForms = ${numOfQues};
+    function formSubmitted() {
+        submittedForms++;
+        if (submittedForms === totalForms) {
+            // Redirect the user to a specific page after all forms are submitted
+            window.location.href = "<%= request.getContextPath() %>/admin_dashboard";
+        }
+    }
+   
+    </script>
 </body>
 </html>

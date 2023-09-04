@@ -1,13 +1,13 @@
 package project.mcq.portal.rowmappers;
 
 import org.springframework.jdbc.core.*;
-import project.mcq.portal.entities.Test;
+import project.mcq.portal.entities.Tests;
 
 import java.sql.*;
 
-public class TestRowMapperImpl implements RowMapper<Test> {
-	public Test mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Test test = new Test();
+public class TestRowMapperImpl implements RowMapper<Tests> {
+	public Tests mapRow(ResultSet rs, int rowNum) throws SQLException {
+		Tests test = new Tests();
 		test.setTestId(rs.getInt("test_id"));
 		test.setTag(rs.getString("tag"));
 		test.setNumberOfQuestions(rs.getInt("no_of_questions"));

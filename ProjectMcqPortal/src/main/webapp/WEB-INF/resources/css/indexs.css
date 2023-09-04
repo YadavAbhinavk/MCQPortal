@@ -1,4 +1,5 @@
 @charset "ISO-8859-1";
+
 /* Your existing CSS styles */
 /* Declare a variable */
 :root {
@@ -111,8 +112,6 @@
 }
 
 .ques_container {
-	position: absolute;
-	top: 15%;
 	width: 100%;
 	display: flex;
 	flex-wrap: wrap;

@@ -24,8 +24,8 @@ import project.mcq.portal.dao.QuestionDao;
 import project.mcq.portal.dao.TestDao;
 import project.mcq.portal.dao.UserTestDao;
 import project.mcq.portal.entities.Question;
-import project.mcq.portal.entities.Test;
-import project.mcq.portal.entities.User;
+import project.mcq.portal.entities.Tests;
+import project.mcq.portal.entities.Users;
 import project.mcq.portal.entities.UserTest;
 
 @Controller
@@ -52,7 +52,7 @@ public class TestController {
 	@PostMapping(value = "/testForm")
 	public ModelAndView addTestWithTag(@RequestParam("tag") String tag, @RequestParam("questions") int numOfQues,
 			Model model,RedirectAttributes redirectAttributes) {
-		Test test = new Test();
+		Tests test = new Tests();
 		
 		int check = testDao.getTest(tag), result = 0;
 		if (check > 0) {
@@ -103,9 +103,9 @@ public class TestController {
 	@GetMapping("/option/{tag}")
 	public String getAvailability(@PathVariable("tag") String tag,@RequestParam("isAvailable") String available,RedirectAttributes redirectAttributes)
 	{
-		Test test = new Test();
+		Tests test = new Tests();
 		test.setTag(tag);
-		List<Test> listOfTest = testDao.getListOfTests();
+		List<Tests> listOfTest = testDao.getListOfTests();
 		int num = 0;
 		for(int i =0;i < listOfTest.size();i++)
 		{
@@ -230,16 +230,16 @@ public class TestController {
 		redirectAttributes.addFlashAttribute("message","Question was deleted");
 		return "redirect:/update_tests/{tag}";
 	}
-//delete questions function ends here		
+//      delete questions function ends here		
 	
 
 	
-//      user test atarts here
+//      user test starts here
 		@GetMapping("/start_test/{tag}")
 		public String startTest(@PathVariable("tag") String tag,HttpSession session, Model model,RedirectAttributes redirectAttributes) {
 
 			
-			User user = (User) session.getAttribute("user");
+			Users user = (Users) session.getAttribute("user");
 			if (user == null) {
 				return "redirect:/login";
 			}
@@ -321,7 +321,7 @@ public class TestController {
 	        model.addAttribute("listOfQuestions",listOfQuestions);
 	        model.addAttribute("selectedRadioValues",selectedRadioValues);
 	        
-	        User user = (User)session.getAttribute("user");
+	        Users user = (Users)session.getAttribute("user");
 	        int userId = user.getUserId();
 	        UserTest userTest = new UserTest();
 	    	userTest.setScore(score);

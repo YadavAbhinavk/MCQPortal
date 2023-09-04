@@ -62,36 +62,37 @@
 					</tr>
 				</thead>
 				<%
-				List<Test> listOfTests = (List<Test>)request.getAttribute("listOfTests");
-				// Number of questions per page
-			    int testsPerPage = 8;
 
-			    // Calculate the total number of pages
-			    int totalPages = (listOfTests.size() + testsPerPage - 1) / testsPerPage;
+						List<Tests> listOfTests = (List<Tests>)request.getAttribute("listOfTests");
+						// Number of questions per page
+					    int testsPerPage = 8;
 
-			    // Get the current page parameter
-			    String currentPageParam = request.getParameter("p");
-			    int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
-			    
-			    // Check if currentPageParam is a valid integer
-			    if (currentPageParam != null) {
-			        try {
-			            currentPage = Integer.parseInt(currentPageParam);
-			            // Ensure that currentPage is within valid bounds
-			            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
-			        } catch (NumberFormatException e) {
-			            // Handle invalid page number gracefully
-			            currentPage = 1; // Redirect to the first page
-			        }
-			    }
-			    // Calculate the start and end indices for the current page
-			    int startIndex = (currentPage - 1) * testsPerPage;
-			    int endIndex = Math.min(startIndex + testsPerPage,  listOfTests.size());
-			    		
-				if (listOfTests != null) {
-					int index = startIndex + 1; // Start index for the current page
-                    for (int i = startIndex; i < endIndex; i++) {
-                        Test test = listOfTests.get(i);
+					    // Calculate the total number of pages
+					    int totalPages = (listOfTests.size() + testsPerPage - 1) / testsPerPage;
+
+					    // Get the current page parameter
+					    String currentPageParam = request.getParameter("p");
+					    int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
+					    
+					    // Check if currentPageParam is a valid integer
+					    if (currentPageParam != null) {
+					        try {
+					            currentPage = Integer.parseInt(currentPageParam);
+					            // Ensure that currentPage is within valid bounds
+					            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+					        } catch (NumberFormatException e) {
+					            // Handle invalid page number gracefully
+					            currentPage = 1; // Redirect to the first page
+					        }
+					    }
+					    // Calculate the start and end indices for the current page
+					    int startIndex = (currentPage - 1) * testsPerPage;
+					    int endIndex = Math.min(startIndex + testsPerPage,  listOfTests.size());
+					    		
+						if (listOfTests != null) {
+							int index = startIndex + 1; // Start index for the current page
+				                    for (int i = startIndex; i < endIndex; i++) {
+				                        Tests test = listOfTests.get(i);
 				%>
 				<tr>
 					<td><%=index++%></td>
@@ -132,6 +133,28 @@
         <a href="<%= request.getContextPath() %>/admin_dashboard/?p=<%= totalPages %>">&raquo;</a>
 </div>
 </div>
-<script src="<c:url value="/resources/js/index.js"/>"></script>
+<script>
+window.onpopstate = (e)=> {
+	alert("event is");
+}
+</script>
+<script >
+function confirmDelete(tag, isAvailable) {
+    if (isAvailable === "active") {
+        var confirmDeactivate = confirm("The test is currently active. Are you sure you want to delete it? Please deactivate it first.");
+        if (confirmDeactivate) {
+            // Redirect to a deactivate endpoint or handle deactivation logic here
+            window.location.href = "<%= request.getContextPath() %>/update_tests/"+tag;
+        }
+    } else {
+        var confirmDelete = confirm("Are you sure you want to delete the whole Test?");
+        if (confirmDelete) {
+            window.location.href = "<%= request.getContextPath() %>/delete_test/"+tag;
+        }
+    }
+}
+</script>
+
+    <script src="<c:url value='/resources/js/index.js'/>"></script>
 </body>
 </html>

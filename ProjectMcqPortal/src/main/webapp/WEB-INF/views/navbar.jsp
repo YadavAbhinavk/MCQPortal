@@ -9,7 +9,7 @@
 	</div>
 	<%
 	Admin admin = (Admin) session.getAttribute("admin");
-	User user = (User) session.getAttribute("user");
+		Users user = (Users) session.getAttribute("user");
 	%>
 	<ul class="nav-links" id="navLinks">
 		<li><a href="#steps">Services</a></li>

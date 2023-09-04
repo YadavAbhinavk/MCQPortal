@@ -12,11 +12,11 @@
 	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
 	<%@include file="cache-remove.jsp"%>
 	<%
-	User user = (User) session.getAttribute("user");
-	if (user == null) {
-		String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/home");
-	}
+	Users user = (Users) session.getAttribute("user");
+		if (user == null) {
+			String contextPath = request.getContextPath();
+	        response.sendRedirect(contextPath + "/home");
+		}
 	%>
 	<nav class="navbar">
 		<div class="logo">

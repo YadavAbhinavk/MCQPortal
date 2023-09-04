@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 
-import project.mcq.portal.entities.Test;
+import project.mcq.portal.entities.Tests;
 import project.mcq.portal.rowmappers.*;
 
 public class TestDaoImpl implements TestDao {
@@ -22,7 +22,7 @@ public class TestDaoImpl implements TestDao {
 	}
 
 	@Override
-	public int insertTest(Test test) {
+	public int insertTest(Tests test) {
 		String insertQuery = "INSERT INTO " + "tests " + "(tag, no_of_questions)" + "VALUES (?,?)";
 
 		return this.jdbcTemplate.update(insertQuery, test.getTag(), test.getNumberOfQuestions());
@@ -36,7 +36,7 @@ public class TestDaoImpl implements TestDao {
 	}
 
 	@Override
-	public int updateTest(Test test) {
+	public int updateTest(Tests test) {
 		String updateQuery = "UPDATE tests " + "SET is_available =? WHERE tag = ?";
 		Integer update = this.jdbcTemplate.update(updateQuery,test.getIsAvailable() ,test.getTag());
 		return update;
@@ -50,7 +50,7 @@ public class TestDaoImpl implements TestDao {
 		return result;
 	}
 	@Override
-	public List<Test> getListOfTests()
+	public List<Tests> getListOfTests()
 	{
 		String selectAllTests = "Select * from Tests";
 		

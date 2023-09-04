@@ -1,16 +1,16 @@
 package project.mcq.portal.entities;
 
-public class User {
+public class Users {
 	private int userId;
 	private String name;
 	private String mobileNo;
 	private String password;
 	
-	public User() {
+	public Users() {
 		super();
 	}
 	
-	public User(int userId, String name, String mobileNo, String password) {
+	public Users(int userId, String name, String mobileNo, String password) {
 		super();
 		this.userId = userId;
 		this.name = name;

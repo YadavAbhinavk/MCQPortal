@@ -55,7 +55,7 @@
 		</div>
 	</div>
 
-	<script src="<c:url value="/resources/js/script.js"/>"></script>
+	<script src="<c:url value="/resources/js/index.js"/>"></script>
 
 </body>
 </html>

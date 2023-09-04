@@ -22,11 +22,11 @@ border-bottom:none;
 
 <%@include file="cache-remove.jsp"%>
 	<%
-	User user = (User) session.getAttribute("user");
-	if (user == null) {
-		String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/home");
-	}
+	Users user = (Users) session.getAttribute("user");
+		if (user == null) {
+			String contextPath = request.getContextPath();
+	        response.sendRedirect(contextPath + "/home");
+		}
 	%>
 	
 	<nav class="navbar">
@@ -39,7 +39,6 @@ border-bottom:none;
 	<%
 	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
-	String message = (String) request.getAttribute("message");
 	//Correct answer list
 	List<String> correct_ans = new ArrayList<String>();
 	String isAvailable = (String) request.getAttribute("isAvailable");

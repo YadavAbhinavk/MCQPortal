@@ -23,11 +23,11 @@ transition:0.3s;
 <body style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
 <%@include file="cache-remove.jsp"%>
 	<%
-	User user = (User) session.getAttribute("user");
-	if (user == null) {
-		String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/home");
-	}
+	Users user = (Users) session.getAttribute("user");
+		if (user == null) {
+			String contextPath = request.getContextPath();
+	        response.sendRedirect(contextPath + "/home");
+		}
 	%>
 	
 <nav class="navbar">
@@ -64,34 +64,34 @@ transition:0.3s;
         <th>Action</th>
     </tr>
  
-    <% 
-    List<Test> listOfTests = (List)request.getAttribute("listOfTests");
-    int testsPerPage = 10; // Number of tests per page
-    int totalPages = (listOfTests.size() + testsPerPage - 1) / testsPerPage;
-    String currentPageParam = request.getParameter("p");
-    int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
-    
- // Check if currentPageParam is a valid integer
-    if (currentPageParam != null) {
-        try {
-            currentPage = Integer.parseInt(currentPageParam);
-            // Ensure that currentPage is within valid bounds
-            currentPage = Math.min(Math.max(currentPage, 1), totalPages);
-        } catch (NumberFormatException e) {
-            // Handle invalid page number gracefully
-            currentPage = 1; // Redirect to the first page
-        }
-    }
- 
-    int startIndex = (currentPage - 1) * testsPerPage;
-    int endIndex = Math.min(startIndex + testsPerPage, listOfTests.size());
+    <%
+     List<Tests> listOfTests = (List)request.getAttribute("listOfTests");
+         int testsPerPage = 10; // Number of tests per page
+         int totalPages = (listOfTests.size() + testsPerPage - 1) / testsPerPage;
+         String currentPageParam = request.getParameter("p");
+         int currentPage = (currentPageParam != null) ? Integer.parseInt(currentPageParam) : 1;
+         
+      // Check if currentPageParam is a valid integer
+         if (currentPageParam != null) {
+             try {
+                 currentPage = Integer.parseInt(currentPageParam);
+                 // Ensure that currentPage is within valid bounds
+                 currentPage = Math.min(Math.max(currentPage, 1), totalPages);
+             } catch (NumberFormatException e) {
+                 // Handle invalid page number gracefully
+                 currentPage = 1; // Redirect to the first page
+             }
+         }
+      
+         int startIndex = (currentPage - 1) * testsPerPage;
+         int endIndex = Math.min(startIndex + testsPerPage, listOfTests.size());
 
-    if (listOfTests != null) {
-        int index =  startIndex + 1;
-        for (int i = startIndex; i < endIndex; i++) {
-            Test test = listOfTests.get(i);
-            if (test.getIsAvailable().equals("active")) {
-    %>
+         if (listOfTests != null) {
+             int index =  startIndex + 1;
+             for (int i = startIndex; i < endIndex; i++) {
+                 Tests test = listOfTests.get(i);
+                 if (test.getIsAvailable().equals("active")) {
+     %>
      <tr>
      <td><%= index++ %></td>
      <td><%= test.getTag() %></td>

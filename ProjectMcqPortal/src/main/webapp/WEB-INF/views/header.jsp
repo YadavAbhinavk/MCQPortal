@@ -6,7 +6,7 @@
 
     <!-- css files -->
     <link rel="stylesheet" href="<c:url value='/resources/css/home.css' />" >
-    <link rel="stylesheet" href="<c:url value="/resources/css/index.css" />">
+    <link rel="stylesheet" href="<c:url value="/resources/css/indexs.css" />">
     <link rel="stylesheet" href="<c:url value="/resources/css/styles.css" />">
 
     <!-- import files -->
@@ -18,4 +18,4 @@
     <!-- icon for the website -->
     <link rel="icon" href="<c:url value="/resources/images/home/quiz_icon.png"/>" type="image/x-icon">
     <title>QuizVault</title>
-    <script src="<c:url value='/resources/js/script.js'/>"></script>
+    <script src="<c:url value='/resources/js/index.js'/>"></script>

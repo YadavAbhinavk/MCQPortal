@@ -2,6 +2,16 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="project.mcq.portal.entities.*"%>
+
+
+<%
+   // Set cache-control headers to prevent caching
+   response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+   response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+   response.setDateHeader("Expires", 0); // Proxies
+
+   // Your other JSP code here
+%>
 <!DOCTYPE html>
 <html>
 <head>

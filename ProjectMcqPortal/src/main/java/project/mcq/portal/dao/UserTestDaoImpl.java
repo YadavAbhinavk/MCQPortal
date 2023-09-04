@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import project.mcq.portal.entities.Admin;
 import project.mcq.portal.entities.Question;
-import project.mcq.portal.entities.Test;
+import project.mcq.portal.entities.Tests;
 import project.mcq.portal.entities.UserTest;
 import project.mcq.portal.rowmappers.UserTestRowMapper;
 

@@ -33,7 +33,7 @@ public class AdminController {
 	@GetMapping("/admin")
 	public ModelAndView admin(HttpSession session) {
 		Admin admin = (Admin)session.getAttribute("admin");
-		User user = (User)session.getAttribute("user");
+		Users user = (Users)session.getAttribute("user");
 		if(admin == null && user == null)
 		{
 			return new ModelAndView("admin_login");
@@ -76,7 +76,7 @@ public class AdminController {
 
 		if(admin != null)
 		{
-			List<Test> listOfTests = testDao.getListOfTests();
+			List<Tests> listOfTests = testDao.getListOfTests();
 			model.addAttribute("listOfTests",listOfTests);
 			return new ModelAndView("admin_dashboard");
 		}
@@ -87,5 +87,12 @@ public class AdminController {
 		
 	}
 //	Admin Login ends here
+
+	
+	//For testing
+	public void setAdminDao(AdminDao adminDao2) {
+		// TODO Auto-generated method stub
+		this.adminDao = adminDao2;
+	}
 }
 

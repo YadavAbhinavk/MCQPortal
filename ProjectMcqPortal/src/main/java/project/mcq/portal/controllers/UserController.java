@@ -9,22 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import project.mcq.portal.dao.TestDao;
-import project.mcq.portal.dao.UserDao;
-import project.mcq.portal.dao.UserTestDao;
-import project.mcq.portal.entities.Admin;
-import project.mcq.portal.entities.Test;
-import project.mcq.portal.entities.User;
-import project.mcq.portal.entities.UserTest;
+import project.mcq.portal.dao.*;
+import project.mcq.portal.entities.*;
+
 
 @Controller
 public class UserController {
@@ -42,7 +33,7 @@ public class UserController {
 	@GetMapping(value = "/login")
 	public ModelAndView login(HttpSession session,@ModelAttribute("message") String message,Model model) {
 		Admin admin = (Admin) session.getAttribute("admin");
-		User user = (User) session.getAttribute("user");
+		Users user = (Users) session.getAttribute("user");
 		if (user == null && admin == null) {
 			model.addAttribute("message",message);
 			return new ModelAndView("login");
@@ -57,14 +48,14 @@ public class UserController {
 	}
 
 	@PostMapping("/loginForm")
-	public ModelAndView handleAdmin(HttpServletRequest request, @RequestParam("mobile") String mobileNo,
+	public ModelAndView handleUser(HttpServletRequest request, @RequestParam("mobile") String mobileNo,
 			@RequestParam("password") String password, Model model,RedirectAttributes redirectAttributes) {
 
 		try {
-			User user = userDao.getUser(mobileNo, password);
-			if (user != null) {
+			Users users = userDao.getUser(mobileNo, password);
+			if (users != null) {
 				HttpSession session = request.getSession();
-				session.setAttribute("user", user);
+				session.setAttribute("user", users);
 				model.addAttribute("message", "Successfully logged in !!!!");
 				return new ModelAndView("redirect:/user_dashboard");
 			} else {
@@ -80,7 +71,7 @@ public class UserController {
 	@GetMapping(value = "/register")
 	public String register(@ModelAttribute("message") String message,HttpSession session,Model model) {
 		Admin admin = (Admin) session.getAttribute("admin");
-		User user = (User) session.getAttribute("user");
+		Users user = (Users) session.getAttribute("user");
 		if(admin != null && user == null)
 		{
 			return "redirect:/home";
@@ -92,7 +83,7 @@ public class UserController {
 	@RequestMapping(value = "/registerForm", method = RequestMethod.POST)
 	public ModelAndView registerUser(@RequestParam("name") String fullName, @RequestParam("mobile") String mobileNo,
 			@RequestParam("password") String password, Model model,RedirectAttributes redirectAttributes) {
-		User user = new User();
+		Users user = new Users();
 		user.setName(fullName);
 		user.setMobileNo(mobileNo);
 		user.setPassword(password);
@@ -109,7 +100,7 @@ public class UserController {
 
 	@GetMapping("/user_dashboard")
 	public ModelAndView userDashboad(Model model,@ModelAttribute("message")String message) {
-		List<Test> listOfTests = testDao.getListOfTests();
+		List<Tests> listOfTests = testDao.getListOfTests();
 		model.addAttribute("listOfTests", listOfTests);
 		model.addAttribute("message", message);
 		return new ModelAndView("user_dashboard");
@@ -118,7 +109,7 @@ public class UserController {
 	// Show completed tests
 	@GetMapping("/user_test")
 	public ModelAndView userTest(Model model, HttpSession session) {
-		User user = (User) session.getAttribute("user");
+		Users user = (Users) session.getAttribute("user");
 		if (user != null) {
 			List<UserTest> userListOfTests = userTestDao.getAllUserTest(user.getUserId());
 			model.addAttribute("userListOfTests", userListOfTests);

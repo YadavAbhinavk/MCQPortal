@@ -74,17 +74,8 @@ function validateMobileNumber(input) {
             }
         }
     
-function confirmDelete(tag, isAvailable) {
-    if (isAvailable === "active") {
-        var confirmDeactivate = confirm("The test is currently active. Are you sure you want to delete it? Please deactivate it first.");
-        if (confirmDeactivate) {
-            // Redirect to a deactivate endpoint or handle deactivation logic here
-            window.location.href = "<%= request.getContextPath() %>/update_tests/"+tag;
-        }
-    } else {
-        var confirmDelete = confirm("Are you sure you want to delete the whole Test?");
-        if (confirmDelete) {
-            window.location.href = "<%= request.getContextPath() %>/delete_test/"+tag;
-        }
-    }
-}
+window.addEventListener('unload', () => {
+	  console.log('User clicked back button');
+
+	  document.body.style.backgroundColor = 'white';
+	});

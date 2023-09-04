@@ -12,11 +12,11 @@
 	<%@include file="cache-remove.jsp"%>
 
 	<%
-	User user = (User) session.getAttribute("user");
-	if (user != null) {
-		String contextPath = request.getContextPath();
-        response.sendRedirect(contextPath + "/user_dashboard");
-	}
+	Users user = (Users) session.getAttribute("user");
+		if (user != null) {
+			String contextPath = request.getContextPath();
+	        response.sendRedirect(contextPath + "/user_dashboard");
+		}
 	%>
 	<nav class="navbar">
 		<div class="logo">

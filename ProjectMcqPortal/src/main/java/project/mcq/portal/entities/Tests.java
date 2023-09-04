@@ -1,6 +1,6 @@
 package project.mcq.portal.entities;
 
-public class Test {
+public class Tests {
 	private int testId;
 	private String tag;
 	private int numberOfQuestions;
@@ -9,13 +9,13 @@ public class Test {
 	
 	
 
-	public Test() {
+	public Tests() {
 		super();
 		
 	}
 	
 	
-	public Test(int testId, String tag, int numberOfQuestions, int numberOfUsers, String isAvailable) {
+	public Tests(int testId, String tag, int numberOfQuestions, int numberOfUsers, String isAvailable) {
 		super();
 		this.testId = testId;
 		this.tag = tag;

@@ -1,6 +1,6 @@
 package project.mcq.portal.dao;
 
-import project.mcq.portal.entities.User;
+import project.mcq.portal.entities.Users;
 
 import project.mcq.portal.rowmappers.UserRowMapper;
 
@@ -22,7 +22,7 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public int insertUser(User user) {
+	public int insertUser(Users user) {
 		try {
 			String insertQuery = "INSERT INTO " + "users " + "(mobile_no, name, password)" + "VALUES (?,?,?)";
 
@@ -36,11 +36,11 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public User getUser(String mobileNo, String password) {
+	public Users getUser(String mobileNo, String password) {
 		try {
 
 			String query = "SELECT * FROM users WHERE mobile_no = ? AND password = ?";
-			User user = null;
+			Users user = null;
 			if (mobileNo != null && !mobileNo.isEmpty()) {
 				if (password != null && !password.isEmpty()) {
 					user = jdbcTemplate.queryForObject(query, new UserRowMapper(), mobileNo, password);

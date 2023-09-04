@@ -9,6 +9,17 @@
 <head>
 <%@ include file="header.jsp"%>
 <link rel="stylesheet" href="<c:url value="/resources/css/css1.css" />">
+<style>
+#result
+{
+display:none;
+}
+tr:hover td 
+{
+background-color:inherit;
+color:black;
+}
+</style>
 </head>
 <body>
 <%@include file="cache-remove.jsp"%>
@@ -40,15 +51,12 @@
 				Your score is
 				<%=score%></h2>
 
-			<button onclick="onClick()">View Results</button>
+			<button onclick="unHideResult()" class="mybtn">View Results</button>
 		</div>
 	</div>
 
 
-	<div class="result">
-
-
-
+	<div id="result">
 
 		<%
 		if (listOfQuestions != null) {
@@ -136,5 +144,6 @@
 		}
 		%>
 	</div>
+	<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

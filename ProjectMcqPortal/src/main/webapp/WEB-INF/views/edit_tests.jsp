@@ -7,7 +7,6 @@
 <html>
 <head>
 <%@ include file="header.jsp"%>
-
 </head>
 <body
 	style="background-image: url('<c:url value="/resources/images/bg_image.jpeg"/>');">
@@ -146,7 +145,7 @@
 								href="<%=application.getContextPath()%>/update_ques/<%=ques.getQuestionId()%>" id="edit_icon"><i
 								class="fa-solid fa-pen-to-square"></i></a>
 							<a
-								href="<%=application.getContextPath()%>/delete_ques/<%=ques.getQuestionId()%>/<%=ques.getTag()%>"id="delete_icon"><i
+								href="javascript:void(0);" onclick="confirmDelete('<%=ques.getQuestionId()%>','<%= ques.getTag() %>','<%= isAvailable %>')" id="delete_icon"><i
 								class="fa-solid fa-trash"></i></a>
 					</td>
 				</tr>
@@ -176,7 +175,19 @@
         <a href="<%= request.getContextPath() %>/update_tests/<%= tag %>?p=<%= totalPages %>">&raquo;</a>
 </div>
 </div>
-
 <script src="<c:url value="/resources/js/index.js"/>"></script>
+<script >
+
+function confirmDelete(questionId, tag, isAvailable) {
+    if (isAvailable === "active") {
+        if (confirm("The test is currently active. Do you want to make it Inactive and delete the question?"+tag)) {
+            window.location.href =  "<%= request.getContextPath() %>/update_tests/" + tag ;
+        }
+    } 
+    else {
+            window.location.href = '<%= request.getContextPath() %>/delete_ques/' + questionId + '/' + tag;
+    }
+}
+</script>
 </body>
 </html>
