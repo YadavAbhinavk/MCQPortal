@@ -131,7 +131,7 @@ public class TestController {
 		
 	}
 	@GetMapping("/option1/{tag}")
-	public String getAvailability(@PathVariable("tag") String tag,
+	public String getTestDetails(@PathVariable("tag") String tag,
 			@RequestParam("quesPerTest") int quesPerTest,
 			@RequestParam("timePerQues") int timePerQues,
 			RedirectAttributes redirectAttributes,

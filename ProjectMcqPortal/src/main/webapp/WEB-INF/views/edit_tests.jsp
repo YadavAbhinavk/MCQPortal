@@ -87,23 +87,24 @@
                 <input type="number" name="numOfQues" min="1" max="50" value="1" required />
                 <input type="submit" class="add_new" value="Add questions" style="color:white;" />
             </form>
-            
+            <br>
             <form action="<%= request.getContextPath() %>/option/<%= tag %>" method="get" style="" >
                 <div>
                 <select name="isAvailable">
                     <option value="active" <%= (test.getIsAvailable() != "" && test.getIsAvailable().equalsIgnoreCase("active")) ? "selected" : "" %>>Active</option>
                     <option value="inactive" <%= (test.getIsAvailable() != "" && test.getIsAvailable().equalsIgnoreCase("inactive")) ? "selected" : "" %>>Inactive</option>
-                </select>
-     
+                </select>     
            
                 <input type="submit" class="add_new" value="Change" style="color:white;float:right;"  />
+                </div>
             </form>
+            
             <form action="<%= request.getContextPath() %>/option1/<%= tag %>" method="get" onsubmit="return checkAvailable('<%= test.getIsAvailable() %>');">
             <input type="number" name="quesPerTest" min="1" max="<%= test.getNumberOfQuestions() %>" value="<%= test.getQuestionsPerTest() %>" style="width:100px;" />
                  <label>Questions Per Test</label>
                   <input type="number" name="timePerQues" min="5"  max="1200" value="<%= test.getTimePerQuestion()  %>" style="width:100px;"/>
                   <label>Time per each questions in(seconds)</label>
-                  </div>
+                  
                    <input type="submit" class="add_new" value="Change" style="color:white;float:right;"  />
                   </form>
             
