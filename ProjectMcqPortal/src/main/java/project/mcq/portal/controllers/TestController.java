@@ -155,30 +155,11 @@ public class TestController {
 	@GetMapping("/update_ques/{questionId}")
 	public String updateQuestion(@PathVariable("questionId") int quesId, Model model) {
 
-		// Retrieve the question by its ID
-		Question questionToUpdate = quesDao.getQuestion(quesId);
-
-		if (questionToUpdate == null) {
-			// Handle the case when the question is not found
-			// You can set an appropriate error message here
-			model.addAttribute("errorMessage", "Question not found");
-			return "error"; // Assuming you have an "error" view
-		}
-
-		// Retrieve the availability status of the test
-		String availabilityStatus = testDao.getAvailability(questionToUpdate.getTag());
-
-		if (availabilityStatus == null) {
-			// Handle the case when the availability status is not found
-			// You can set an appropriate error message here
-			model.addAttribute("errorMessage", "Availability status not found");
-			return "error"; // Assuming you have an "error" view
-		}
-
-		// Set the attributes in the model
-		model.addAttribute("questionToUpdate", questionToUpdate);
-		model.addAttribute("isAvailable", availabilityStatus);
-
+		Question question = quesDao.getQuestion(quesId);
+		String available = testDao.getAvailability(question.getTag());
+		System.out.println(question);
+		model.addAttribute("questionToUpdate", question);
+		model.addAttribute("isAvailable", available);
 		return "update_ques";
 	}
 
@@ -291,9 +272,9 @@ public class TestController {
 //      user test ends here		
 
 //      user test answer submission and calculation atarts here		
-	@PostMapping("/processSelectedRadioValues")
-	public String processSelectedRadio(HttpServletRequest request, Model model,
-			@RequestParam("submissionTime") String submissionTime) {
+	@PostMapping("/processSelectedRadioValues/{tag}")
+	public String processSelectedRadio(@PathVariable("tag") String tag,HttpServletRequest request, Model model,
+			@RequestParam("submissionTime") String submissionTime,HttpSession session) {
 
 		// Getting the Radio Button values that were selected
 		List<String> selectedRadioValues = new ArrayList<>();
@@ -326,6 +307,21 @@ public class TestController {
 		System.out.println(listOfQuestions);
 		// Redirect to the appropriate view
 		System.out.println("Time is: " + submissionTime);
+		
+		Users user = (Users)session.getAttribute("user");
+		if(user == null)
+		{
+			return "redirect;/home";
+		}
+        int userId = user.getUserId();
+     
+        UserTest userTest = new UserTest();
+    	userTest.setScore(score);
+    	userTest.setTag(tag);
+    	userTest.setSubmissionTime(request.getParameter("submissionTime"));
+    	userTest.setUserId(userId);
+    	System.out.println("User Test: "+userTest);
+    	userTestDao.insertUser(userTest);
 		return "score";
 	}
 //      user test answer submission and calculation ends here			

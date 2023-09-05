@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+<%@page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@page import="project.mcq.portal.entities.*"%>
 <%@page import="java.util.*"%>
@@ -23,6 +23,13 @@ color:black;
 </head>
 <body>
 <%@include file="cache-remove.jsp"%>
+	<%
+	Users user = (Users) session.getAttribute("user");
+		if (user == null) {
+			String contextPath = request.getContextPath();
+	        response.sendRedirect(contextPath + "/home");
+		}
+	%>
 	<nav class="navbar">
 		<div class="logo">
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
@@ -144,6 +151,7 @@ color:black;
 		}
 		%>
 	</div>
+
 	<script>
 	function unHideResult() {
 		var resultElements = document.getElementById("result").style.display = "block";
@@ -151,6 +159,7 @@ color:black;
 		
 	}
 	</script>
-	<script src="<c:url value="/resources/js/index.js"/>"></script>
+
+	
 </body>
 </html>
