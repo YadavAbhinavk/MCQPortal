@@ -17,6 +17,8 @@ public class QuestionRowsMapper implements RowMapper<Question> {
         question.setOption3(rs.getString("option3"));
         question.setOption4(rs.getString("option4"));
         question.setCorrectAnswer(rs.getString("answer"));
+        question.setCorrectMarks(rs.getInt("correct_marks"));
+        question.setWrongMarks(rs.getInt("wrong_marks"));
         return question;
     }
 

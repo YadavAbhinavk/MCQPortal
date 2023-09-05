@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-
 <%@page import="project.mcq.portal.entities.*"%>
 <%@page import="java.util.*"%>
 <!DOCTYPE html>
@@ -134,11 +133,6 @@
 </div>
 </div>
 <script>
-window.onpopstate = (e)=> {
-	alert("event is");
-}
-</script>
-<script >
 function confirmDelete(tag, isAvailable) {
     if (isAvailable === "active") {
         var confirmDeactivate = confirm("The test is currently active. Are you sure you want to delete it? Please deactivate it first.");

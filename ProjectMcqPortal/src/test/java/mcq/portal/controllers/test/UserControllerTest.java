@@ -52,7 +52,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -99,13 +99,20 @@ public class UserControllerTest {
 
     @Test
     public void testUserDashboard() {
-        List<Tests> listOfTests = new ArrayList<>();
+    	List<Tests> listOfTests = new ArrayList<>();
         when(testDao.getListOfTests()).thenReturn(listOfTests);
 
-        ModelAndView modelAndView = userController.userDashboad(model, "");
+        // Calling the userDashboard method
+        ModelAndView modelAndView = userController.userDashboard(model, "message"); // Pass "message" as the message attribute
 
+        // Verify that the view name is as expected
         assertEquals("user_dashboard", modelAndView.getViewName());
-        assertEquals(listOfTests, model.getAttribute("listOfTests"));
+
+        // Verify that the model attribute "listOfTests" is correctly set
+        verify(model).addAttribute("listOfTests", listOfTests);
+
+        // Verify that the model attribute "message" is correctly set to "message"
+        verify(model).addAttribute("message", "message"); 
     }
 
     // You can add more test cases for other methods as needed

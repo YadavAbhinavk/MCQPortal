@@ -39,11 +39,10 @@ border-bottom:none;
 	<%
 	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List) request.getAttribute("listOfQuestions");
-	//Correct answer list
+	Tests test = (Tests)request.getAttribute("test");
 	List<String> correct_ans = new ArrayList<String>();
-	String isAvailable = (String) request.getAttribute("isAvailable");
 	StringJoiner stringJoiner = new StringJoiner(", ");
-	if (isAvailable != null) {
+	if (test.getIsAvailable() != null) {
 	%>
 	
 	<div class="start">
@@ -52,10 +51,10 @@ border-bottom:none;
 		</div>
 	</div>
 	  
-	<form action="<%=request.getContextPath()%>/processSelectedRadioValues/<%=tag %>"
-		method="post" id = "testForm">
+	<form action="<%=request.getContextPath()%>/processSelectedRadioValues"
+		method="post" id ="testForm">
 		<%
-		if (listOfQuestions != null) {
+		if (!listOfQuestions.isEmpty()) {
 			int index = 0;
 			for (Question ques : listOfQuestions) {
 				index++;
@@ -66,7 +65,7 @@ border-bottom:none;
 			<div class="quiz_header">
 				<table>
 
-					<h2 style="text-align: justify; font-size: 20px;">
+					<h2 style="text-align: justify; font-size: 18px;">
 						Question
 						<%=index%>.
 						<span style="text-align: justify; font-size: 12px;"><%=ques.getQuestionName()%></span></h2>
@@ -128,10 +127,15 @@ border-bottom:none;
 <br>
 
 <script>
-var time = 2*<%=listOfQuestions.size()%>;
+// Assuming time per question in seconds per question, adjust as needed
+var totalTimeInSeconds = <%= listOfQuestions.size() %> * <%= test.getTimePerQuestion() %>; 
+
+// Convert total time in seconds to minutes and seconds
+var totalMinutes = Math.floor(totalTimeInSeconds / 60);
+var totalSeconds = totalTimeInSeconds % 60;
 
 document.getElementById('timer').innerHTML =
-	  time + ":" + 00;
+	totalMinutes + ":" + (totalSeconds < 10 ? "0" : "") + totalSeconds;
 	startTimer();
 
 
@@ -163,14 +167,13 @@ document.getElementById("testForm").addEventListener("submit", function() {
 	var submissionTimeField = document.getElementById("submissionTime");
 	submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
 })
-	
-	window.setInterval(function(){ 
-		var submissionTimeField = document.getElementById("submissionTime");
-		submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
-  
-	document.getElementById("testForm").submit();
-      	
-}, time*60*1000);
+window.setTimeout(function(){ 
+	var submissionTimeField = document.getElementById("submissionTime");
+	submissionTimeField.value = new Date().toISOString().split('T')[0]+" "+new Date().toTimeString().split(" ")[0];
+
+document.getElementById("testForm").submit();
+  	
+}, totalTimeInSeconds*1000);
 
 
 // Flag to track form submission
@@ -188,8 +191,16 @@ window.addEventListener(
 				function(event) {
 					if (!formSubmitted) {
 						alert("You have an unfinished test. Are you sure you want to leave?");
+						window.location.href = "<%=request.getContextPath()%>/user_dashboard";
 					}
 				});
+window.addEventListener(
+		"unload",
+		function(event) {
+			if (!formSubmitted) {
+				alert("You have an unfinished test. Are you sure you want to leave?");
+			}
+		});				
 
 
 function checkTestStatus() {
@@ -212,6 +223,16 @@ $.ajax({
 }
 // Check the test status every second (1 second)
 setInterval(checkTestStatus, 3000);
+
+var myEvent = window.attachEvent || window.addEventListener;
+var chkevent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; 
+
+myEvent(chkevent, function(e) { // For >=IE7, Chrome, Firefox
+    var confirmationMessage = 'Are you sure you want to leave';  
+    (e || window.event).returnValue = confirmationMessage;
+    window.location.href = "<%=request.getContextPath()%>/user_dashboard";
+    return confirmationMessage;
+            });
     </script>
 </body>
 </html>

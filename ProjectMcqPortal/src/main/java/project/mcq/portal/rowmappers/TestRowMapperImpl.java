@@ -13,6 +13,8 @@ public class TestRowMapperImpl implements RowMapper<Tests> {
 		test.setNumberOfQuestions(rs.getInt("no_of_questions"));
 		test.setIsAvailable(rs.getString("is_available"));
 		test.setNumberOfUsers(rs.getInt("num_of_users"));
+		test.setQuestionsPerTest(rs.getInt("ques_per_test"));
+		test.setTimePerQuestion(rs.getInt("time_for_each_question"));
 		return test;
 	}
 }

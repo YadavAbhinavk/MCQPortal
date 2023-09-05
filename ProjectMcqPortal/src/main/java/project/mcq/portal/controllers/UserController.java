@@ -99,7 +99,7 @@ public class UserController {
 //	User Login and SingUp ends here
 
 	@GetMapping("/user_dashboard")
-	public ModelAndView userDashboad(Model model,@ModelAttribute("message")String message) {
+	public ModelAndView userDashboard(Model model,@ModelAttribute("message")String message) {
 		List<Tests> listOfTests = testDao.getListOfTests();
 		model.addAttribute("listOfTests", listOfTests);
 		model.addAttribute("message", message);

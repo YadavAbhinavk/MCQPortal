@@ -51,7 +51,7 @@ transition:0.3s;
 		    <%= msg %>
 		  <% } %>
 		  </span>
-                <a href="<%= application.getContextPath() %>/user_test"><button class="add_new">View Past Tests</button></a>
+                <a href="<%= request.getContextPath() %>/user_test"><button class="add_new">View Past Tests</button></a>
             </div>
 		</div>
 		
@@ -59,7 +59,7 @@ transition:0.3s;
 <table>
 <tr>
         <th>Test No.</th>
-        <th>Tag</th>
+        <th>Test Name</th>
         <th>No of questions</th>
         <th>Action</th>
     </tr>
@@ -98,7 +98,7 @@ transition:0.3s;
      <td><%= test.getNumberOfQuestions() %></td>
      
      <td>
-     <a href="<%= application.getContextPath() %>/start_test/<%= test.getTag() %>">Start Test</a>
+     <a href="<%= request.getContextPath() %>/start_test/<%= test.getTag() %>">Start Test</a>
      
      </td>
      

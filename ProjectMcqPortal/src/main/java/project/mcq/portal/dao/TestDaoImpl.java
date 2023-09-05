@@ -3,6 +3,7 @@ package project.mcq.portal.dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 
@@ -23,9 +24,9 @@ public class TestDaoImpl implements TestDao {
 
 	@Override
 	public int insertTest(Tests test) {
-		String insertQuery = "INSERT INTO " + "tests " + "(tag, no_of_questions)" + "VALUES (?,?)";
+		String insertQuery = "INSERT INTO " + "tests " + "(tag, no_of_questions,time_for_each_question,ques_per_test)"+ "VALUES (?,?,?,?)";
 
-		return this.jdbcTemplate.update(insertQuery, test.getTag(), test.getNumberOfQuestions());
+		return this.jdbcTemplate.update(insertQuery, test.getTag(), test.getNumberOfQuestions(),test.getTimePerQuestion(),test.getQuestionsPerTest());
 	}
 
 	@Override
@@ -37,8 +38,16 @@ public class TestDaoImpl implements TestDao {
 
 	@Override
 	public int updateTest(Tests test) {
+		String updateQuery = "UPDATE tests " + "SET time_for_each_question=?,ques_per_test=? WHERE tag = ?";
+		Integer update = this.jdbcTemplate.update(updateQuery,
+				test.getTimePerQuestion(),test.getQuestionsPerTest(),test.getTag());
+		return update;
+	}
+	@Override
+	public int updateAvailablity(Tests test) {
 		String updateQuery = "UPDATE tests " + "SET is_available =? WHERE tag = ?";
-		Integer update = this.jdbcTemplate.update(updateQuery,test.getIsAvailable() ,test.getTag());
+		Integer update = this.jdbcTemplate.update(updateQuery,test.getIsAvailable() ,
+				test.getTag());
 		return update;
 	}
 	
@@ -63,5 +72,18 @@ public class TestDaoImpl implements TestDao {
 		String availablity = jdbcTemplate.queryForObject(query, String.class, tag);
 		return availablity;
 		
+	}
+	@Override
+	public Tests getTestDetails(String tag)
+	{
+		 String query = "SELECT * FROM tests WHERE tag = ?";
+		    Tests test = null;
+		    try {
+		        test = jdbcTemplate.queryForObject(query, new TestRowMapperImpl(),tag);
+		    } catch (EmptyResultDataAccessException e) {
+		        
+		    	return null;
+		    }
+		    return test;
 	}
 }

@@ -144,6 +144,13 @@ color:black;
 		}
 		%>
 	</div>
+	<script>
+	function unHideResult() {
+		var resultElements = document.getElementById("result").style.display = "block";
+
+		
+	}
+	</script>
 	<script src="<c:url value="/resources/js/index.js"/>"></script>
 </body>
 </html>

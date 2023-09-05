@@ -97,7 +97,15 @@
 							<option value="option3" <%= ques.getCorrectAnswer().equals("option3") ? "selected":"" %>>Option3</option>
 							<option value="option4" <%= ques.getCorrectAnswer().equals("option4") ? "selected":"" %>>Option4</option>
 						</select>
-
+					</div>
+					<div>
+					<label>Marks for Correct Answer</label>
+					<input name="correctAns" type="number" value="<%= ques.getCorrectMarks() %>"/>
+					</div>
+					<br>
+					<div>
+					<label>Marks for Wrong Answer</label>
+					<input name="wrongAns" type="number" value="<%= ques.getWrongMarks() %>"/>
 					</div>
 				<input type="submit" value="Update" class="mybtn">
 			</form>

@@ -2,7 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@page import="project.mcq.portal.entities.*"%>
 <%@page import="java.util.*"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,6 +25,12 @@
 			<img src="<c:url value = "/resources/images/home/quiz_icon.png"/> ">
 			Quiz<span>Vault</span>
 		</div>
+		<span id="message">
+			<%String msg = (String)request.getAttribute("message");if (msg != null) { %>
+		    <%= msg %>
+		    
+		  <% } %>
+		  </span>
 		<ul class="nav-links" id="navLinks">
 
 			<li><a href="<%=request.getContextPath()%>/admin_dashboard">View
@@ -41,8 +47,7 @@
 	<%
 	String tag = (String) request.getAttribute("tag");
 	List<Question> listOfQuestions = (List<Question>)request.getAttribute("listOfQuestions");
-	String message = (String) request.getAttribute("message");
-	String isAvailable = (String) request.getAttribute("isAvailable");
+	Tests test = (Tests)request.getAttribute("test");
 	
 	// Number of questions per page
     int questionsPerPage = 10;
@@ -67,7 +72,7 @@
     // Calculate the start and end indices for the current page
     int startIndex = (currentPage - 1) * questionsPerPage;
     int endIndex = Math.min(startIndex + questionsPerPage, listOfQuestions.size());
-	if (isAvailable != null) {
+	if (test.getIsAvailable() != null) {
 	%>
 	<div class="table">
 
@@ -75,40 +80,35 @@
 			<p><%=tag%>
 				Test
 			</p>
-			<span id="message">
-			<%String msg = (String)request.getAttribute("message");if (msg != null) { %>
-		    <%= msg %>
-		    
-		  <% } %>
-		  </span>
-			<div style="display: flex;">
-				<form action="<%=request.getContextPath()%>/add_question/<%=tag%>"
-					method="get">
-					<input type="number" name="numOfQues" min=1 max=20
-						required /> <input type="submit" class="add_new"
-						value="Add questions" style="color: white;" />
-				</form>
-
-				<form action="<%=request.getContextPath()%>/option/<%=tag%>"
-					method="get">
-					<select name="isAvailable">
-						<option value="active"
-							<%if (isAvailable.equalsIgnoreCase("active")) {
-	out.print("selected");
-}%>>Active</option>
-						<option value="inactive"
-							<%if (isAvailable.equalsIgnoreCase("inactive")) {
-	out.print("selected");
-}%>>Inactive</option>
-					</select>
-					<%
-					}
-					%>
-					<input type="submit" class="add_new" value="Submit"
-						style="color: white;" />
-				</form>
-			</div>
-		</div>
+			
+			<div style="display:flex;">
+        
+            <form action="<%= request.getContextPath() %>/add_question/<%= tag %>" method="get">
+                <input type="number" name="numOfQues" min="1" max="50" value="1" required />
+                <input type="submit" class="add_new" value="Add questions" style="color:white;" />
+            </form>
+            
+            <form action="<%= request.getContextPath() %>/option/<%= tag %>" method="get" style="" >
+                <div>
+                <select name="isAvailable">
+                    <option value="active" <%= (test.getIsAvailable() != "" && test.getIsAvailable().equalsIgnoreCase("active")) ? "selected" : "" %>>Active</option>
+                    <option value="inactive" <%= (test.getIsAvailable() != "" && test.getIsAvailable().equalsIgnoreCase("inactive")) ? "selected" : "" %>>Inactive</option>
+                </select>
+     
+           
+                <input type="submit" class="add_new" value="Change" style="color:white;float:right;"  />
+            </form>
+            <form action="<%= request.getContextPath() %>/option1/<%= tag %>" method="get" onsubmit="return checkAvailable('<%= test.getIsAvailable() %>');">
+            <input type="number" name="quesPerTest" min="1" max="<%= test.getNumberOfQuestions() %>" value="<%= test.getQuestionsPerTest() %>" style="width:100px;" />
+                 <label>Questions Per Test</label>
+                  <input type="number" name="timePerQues" min="5"  max="1200" value="<%= test.getTimePerQuestion()  %>" style="width:100px;"/>
+                  <label>Time per each questions in(seconds)</label>
+                  </div>
+                   <input type="submit" class="add_new" value="Change" style="color:white;float:right;"  />
+                  </form>
+            
+        </div>
+    </div>
 
 		<div class="table_section">
 			<table>
@@ -142,14 +142,15 @@
 					<td>
 
 							<a
-								href="<%=application.getContextPath()%>/update_ques/<%=ques.getQuestionId()%>" id="edit_icon"><i
+								href="javascript:void(0);" onclick="confirmAndUpdate('<%=ques.getQuestionId()%>','<%= ques.getTag() %>','<%= test.getIsAvailable() %>')" id="edit_icon"><i
 								class="fa-solid fa-pen-to-square"></i></a>
 							<a
-								href="javascript:void(0);" onclick="confirmDelete('<%=ques.getQuestionId()%>','<%= ques.getTag() %>','<%= isAvailable %>')" id="delete_icon"><i
+								href="javascript:void(0);" onclick="confirmDelete('<%=ques.getQuestionId()%>','<%= ques.getTag() %>','<%= test.getIsAvailable() %>')" id="delete_icon"><i
 								class="fa-solid fa-trash"></i></a>
 					</td>
 				</tr>
 				<%
+				}
 				}
 				}
 				%>
@@ -160,6 +161,7 @@
 		<br>
 	</div>
 <br><br>
+
 <!-- Pagination controls -->
 <div class="center">
 <div class="pagination">
@@ -175,19 +177,48 @@
         <a href="<%= request.getContextPath() %>/update_tests/<%= tag %>?p=<%= totalPages %>">&raquo;</a>
 </div>
 </div>
-<script src="<c:url value="/resources/js/index.js"/>"></script>
-<script >
 
+
+<script>
+function checkAvailable(isAvailable) {
+    if (isAvailable === "active") {
+        // Show a confirmation dialog
+        if (confirm("The test is currently active. Do you want to make it Inactive and then update it?")) {
+            window.location.href = "<%= request.getContextPath() %>/update_tests/<%= tag %>";
+            return false; // Prevent form submission
+        } else {
+           
+            return true; // Proceed with form submission
+        }
+    } else {
+        
+        return true; // Proceed with form submission
+    }
+}
 function confirmDelete(questionId, tag, isAvailable) {
     if (isAvailable === "active") {
-        if (confirm("The test is currently active. Do you want to make it Inactive and delete the question?"+tag)) {
-            window.location.href =  "<%= request.getContextPath() %>/update_tests/" + tag ;
+        if (confirm("The test is currently active. Please make it Inactive and delete the question. " + tag)) 
+        {
+            window.location.href = "<%= request.getContextPath() %>/update_tests/" + tag;
+        }
+    } else {
+        window.location.href = "<%= request.getContextPath() %>/delete_ques/" + questionId + '/' + tag;
+    }
+}
+function confirmAndUpdate(questionId,tag,isAvailable) {
+	if (isAvailable === "active") {
+        if (confirm("The test is currently active. Please make it Inactive and update the question. " + tag)) 
+        {
+            window.location.href = "<%= request.getContextPath() %>/update_tests/" + tag;
         }
     } 
-    else {
-            window.location.href = '<%= request.getContextPath() %>/delete_ques/' + questionId + '/' + tag;
+	else
+		{
+
+        window.location.href = "<%= request.getContextPath() %>/update_ques/" + questionId ;
     }
 }
 </script>
+
 </body>
 </html>

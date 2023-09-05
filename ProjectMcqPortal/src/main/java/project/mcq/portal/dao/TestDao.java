@@ -12,5 +12,6 @@ public interface TestDao
 	public List<Tests> getListOfTests();
 	public int deleteTest(String tag);
 	public String getAvailability(String tag);
-	
+	public Tests getTestDetails(String tag);
+	public int updateAvailablity(Tests test);
 }
